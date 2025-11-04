@@ -4,8 +4,9 @@ defmodule Talents.UserTalent do
 
   schema "user_talents" do
     field :position, :integer
-    field :user_id, :id
-    field :talent_id, :id
+
+    belongs_to :user, Talents.Talent, foreign_key: :talent_id
+    belongs_to :admin, Talents.Accounts.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end

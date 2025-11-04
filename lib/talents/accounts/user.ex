@@ -11,6 +11,10 @@ defmodule Talents.Accounts.User do
     field :name, :string
     field :avatar, :string
 
+    has_many :organizations, Talents.Organization, foreign_key: :admin_id
+    many_to_many :member_organizations, Talents.Organization, join_through: "org_users"
+    many_to_many :talents, Talents.Talent, join_through: "user_talents"
+
     timestamps(type: :utc_datetime)
   end
 

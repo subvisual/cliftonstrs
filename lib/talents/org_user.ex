@@ -4,8 +4,8 @@ defmodule Talents.OrgUser do
 
   schema "org_users" do
 
-    field :org_id, :id
-    field :user_id, :id
+    belongs_to :user, Talents.Organization, foreign_key: :org_id
+    belongs_to :admin, Talents.Accounts.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end
