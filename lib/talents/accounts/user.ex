@@ -135,4 +135,12 @@ defmodule Talents.Accounts.User do
     Bcrypt.no_user_verify()
     false
   end
+
+  def registration_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+    |> email_changeset(attrs, opts)
+    |> password_changeset(attrs, opts)
+  end
 end
