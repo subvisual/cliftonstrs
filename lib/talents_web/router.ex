@@ -66,7 +66,6 @@ defmodule TalentsWeb.Router do
       on_mount: [{TalentsWeb.UserAuth, :mount_current_scope}] do
       live "/users/register", UserLive.Registration, :new
       live "/users/login", UserLive.Login, :new
-      live "/users/login/:token", UserLive.Confirmation, :new
     end
 
     post "/users/login", UserSessionController, :create

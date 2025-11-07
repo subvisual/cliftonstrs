@@ -2,7 +2,6 @@ defmodule Talents.Accounts.UserNotifier do
   import Swoosh.Email
 
   alias Talents.Mailer
-  alias Talents.Accounts.User
 
   # Delivers the email using the application mailer.
   defp deliver(recipient, subject, body) do
@@ -26,7 +25,7 @@ defmodule Talents.Accounts.UserNotifier do
 
     ==============================
 
-    Hi #{user.email},
+    Hi #{user.name},
 
     You can change your email by visiting the URL below:
 
@@ -39,44 +38,20 @@ defmodule Talents.Accounts.UserNotifier do
   end
 
   @doc """
-  Deliver instructions to log in with a magic link.
+  Deliver a welcome message to the user email.
   """
   def deliver_login_instructions(user, url) do
-    case user do
-      %User{confirmed_at: nil} -> deliver_confirmation_instructions(user, url)
-      _ -> deliver_magic_link_instructions(user, url)
-    end
-  end
-
-  defp deliver_magic_link_instructions(user, url) do
-    deliver(user.email, "Log in instructions", """
-
-    ==============================
-
-    Hi #{user.email},
-
-    You can log into your account by visiting the URL below:
-
-    #{url}
-
-    If you didn't request this email, please ignore this.
-
-    ==============================
-    """)
-  end
-
-  defp deliver_confirmation_instructions(user, url) do
     deliver(user.email, "Confirmation instructions", """
 
     ==============================
 
-    Hi #{user.email},
+    Hi #{user.name},
 
-    You can confirm your account by visiting the URL below:
+    Welcome to Talents! You can check your account by visiting the URL below:
 
     #{url}
 
-    If you didn't create an account with us, please ignore this.
+    If you didn't create an account with us, please contact us.
 
     ==============================
     """)
