@@ -71,12 +71,12 @@ defmodule TalentsWeb.UserLive.Registration do
   def handle_event("save", %{"user" => user_params}, socket) do
     case Accounts.register_user(user_params) do
       {:ok, user} ->
-        #token = Accounts.generate_user_session_token(user)
+        login_url = url(~p"/users/login")
+        {:ok,_} = Accounts.deliver_login_instructions(user,login_url)
 
         {:noreply,
          socket
-         |> put_flash(:info, "Welcome #{user.name}!")
-         |> redirect(to: ~p"/")}
+         |> put_flash(:info, "We sent an email to #{user.email}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}

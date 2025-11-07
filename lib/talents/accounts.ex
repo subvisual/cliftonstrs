@@ -228,12 +228,9 @@ defmodule Talents.Accounts do
   end
 
   @doc """
-  Sends an email confirmation link to the given user.
-  """
-  def deliver_login_instructions(%User{} = user, confirmation_url_fun)
-      when is_function(confirmation_url_fun, 1) do
-    {encoded_token, user_token} = UserToken.build_email_token(user, "confirm")
-    Repo.insert!(user_token)
-    UserNotifier.deliver_login_instructions(user, confirmation_url_fun.(encoded_token))
-  end
+Delivers a welcome email with a login link.
+"""
+def deliver_login_instructions(%User{} = user, login_url) do
+  UserNotifier.deliver_login_instructions(user, login_url)
+end
 end

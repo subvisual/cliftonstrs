@@ -37,23 +37,9 @@ defmodule Talents.Accounts.UserNotifier do
     """)
   end
 
-  def deliver_confirmation_instructions(user, url) do
-    deliver(user.email, "Confirmation instructions", """
-
-    ==============================
-
-    Hi #{user.name},
-
-    You can confirm your account by visiting the URL below:
-
-    #{url}
-
-    If you didn't create an account with us, please ignore this.
-
-    ==============================
-    """)
-  end
-
+  @doc """
+  Deliver a welcome message to the user email.
+  """
   def deliver_login_instructions(user, url) do
     deliver(user.email, "Confirmation instructions", """
 
