@@ -29,7 +29,7 @@ defmodule TalentsWeb.UserLive.Settings do
 
       <div class="divider" />
 
-       <.form for={@name_form} id="name_form" phx-change="validate_name" phx-submit="update_name">
+      <.form for={@name_form} id="name_form" phx-change="validate_name" phx-submit="update_name">
         <.input
           field={@name_form[:name]}
           type="text"

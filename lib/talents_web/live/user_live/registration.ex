@@ -72,7 +72,7 @@ defmodule TalentsWeb.UserLive.Registration do
     case Accounts.register_user(user_params) do
       {:ok, user} ->
         login_url = url(~p"/users/login")
-        {:ok,_} = Accounts.deliver_login_instructions(user,login_url)
+        {:ok, _} = Accounts.deliver_login_instructions(user, login_url)
 
         {:noreply,
          socket
