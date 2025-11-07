@@ -228,9 +228,19 @@ defmodule Talents.Accounts do
   end
 
   @doc """
-Delivers a welcome email with a login link.
-"""
-def deliver_login_instructions(%User{} = user, login_url) do
-  UserNotifier.deliver_login_instructions(user, login_url)
-end
+  Delivers a welcome email with a login link.
+  """
+  def deliver_login_instructions(%User{} = user, login_url) do
+    UserNotifier.deliver_login_instructions(user, login_url)
+  end
+
+  def change_user_name(user, attrs \\ %{}) do
+    User.name_changeset(user, attrs)
+  end
+
+  def update_user_name(user, attrs \\ %{}) do
+    user
+    |> change_user_name(attrs)
+    |> Repo.update()
+  end
 end

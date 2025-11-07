@@ -29,6 +29,19 @@ defmodule TalentsWeb.UserLive.Settings do
 
       <div class="divider" />
 
+       <.form for={@name_form} id="name_form" phx-change="validate_name" phx-submit="update_name">
+        <.input
+          field={@name_form[:name]}
+          type="text"
+          label="Name"
+          autocomplete="name"
+          required
+        />
+        <.button variant="primary" phx-disable-with="Saving...">Save Name</.button>
+      </.form>
+
+      <div class="divider" />
+
       <.form
         for={@password_form}
         id="password_form"
@@ -38,13 +51,6 @@ defmodule TalentsWeb.UserLive.Settings do
         phx-submit="update_password"
         phx-trigger-action={@trigger_submit}
       >
-        <input
-          name={@password_form[:email].name}
-          type="hidden"
-          id="hidden_user_email"
-          autocomplete="username"
-          value={@current_email}
-        />
         <.input
           field={@password_form[:password]}
           type="password"
@@ -83,12 +89,14 @@ defmodule TalentsWeb.UserLive.Settings do
   def mount(_params, _session, socket) do
     user = socket.assigns.current_scope.user
     email_changeset = Accounts.change_user_email(user, %{}, validate_unique: false)
+    name_changeset = Accounts.change_user_name(user, %{})
     password_changeset = Accounts.change_user_password(user, %{}, hash_password: false)
 
     socket =
       socket
       |> assign(:current_email, user.email)
       |> assign(:email_form, to_form(email_changeset))
+      |> assign(:name_form, to_form(name_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
 
@@ -126,6 +134,33 @@ defmodule TalentsWeb.UserLive.Settings do
 
       changeset ->
         {:noreply, assign(socket, :email_form, to_form(changeset, action: :insert))}
+    end
+  end
+
+  @impl true
+  def handle_event("validate_name", %{"user" => params}, socket) do
+    form =
+      socket.assigns.current_scope.user
+      |> Accounts.change_user_name(params)
+      |> Map.put(:action, :validate)
+      |> to_form()
+
+    {:noreply, assign(socket, name_form: form)}
+  end
+
+  def handle_event("update_name", %{"user" => params}, socket) do
+    user = socket.assigns.current_scope.user
+    true = Accounts.sudo_mode?(user)
+
+    case Accounts.update_user_name(user, params) do
+      {:ok, user} ->
+        {:noreply,
+         socket
+         |> assign(:name_form, to_form(Accounts.change_user_name(user)))
+         |> put_flash(:info, "Name updated successfully!")}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, :name_form, to_form(changeset, action: :insert))}
     end
   end
 
