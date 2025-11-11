@@ -120,9 +120,7 @@ defmodule TalentsWeb.StrengthLive do
     selected =
       params
       |> Enum.filter(fn {key, talent} -> String.starts_with?(key, "talent_") and talent != "" end)
-      |> Map.new(fn {"talent_" <> rank, talent} -> {String.to_integer(rank), talent} end)
-
-    IO.inspect(selected)
+      |> Map.new(fn {"talent_" <> rank, talent} -> {rank, talent} end)
 
     {:noreply, assign(socket, :selected_talents, selected)}
   end
