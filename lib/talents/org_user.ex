@@ -10,10 +10,9 @@ defmodule Talents.OrgUser do
   end
 
   @doc false
-  def changeset(org_user, attrs, user_scope) do
+  def changeset(org_user, attrs) do
     org_user
     |> cast(attrs, [])
     |> validate_required([:organization, :user])
-    |> put_change(:user_id, user_scope.user.id)
   end
 end

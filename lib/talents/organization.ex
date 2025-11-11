@@ -13,10 +13,9 @@ defmodule Talents.Organization do
   end
 
   @doc false
-  def changeset(organization, attrs, user_scope) do
+  def changeset(organization, attrs) do
     organization
     |> cast(attrs, [:name, :avatar])
     |> validate_required([:name, :avatar])
-    |> put_change(:user_id, user_scope.user.id)
   end
 end
