@@ -1,43 +1,6 @@
 defmodule TalentsWeb.StrengthLive do
   use TalentsWeb, :live_view
 
-  @talents [
-    "Achiever",
-    "Activator",
-    "Adaptability",
-    "Analytical",
-    "Arranger",
-    "Belief",
-    "Command",
-    "Communication",
-    "Competition",
-    "Connectedness",
-    "Consistency",
-    "Context",
-    "Deliberative",
-    "Developer",
-    "Discipline",
-    "Empathy",
-    "Focus",
-    "Futuristic",
-    "Harmony",
-    "Ideation",
-    "Includer",
-    "Individualization",
-    "Input",
-    "Intellection",
-    "Learner",
-    "Maximizer",
-    "Positivity",
-    "Relator",
-    "Responsibility",
-    "Restorative",
-    "Self-Assurance",
-    "Significance",
-    "Strategic",
-    "Woo"
-  ]
-
   def render(assigns) do
     ~H"""
     <h1 class="text-2xl font-bold mb-6">CliftonStrengths Ranking</h1>
@@ -58,7 +21,7 @@ defmodule TalentsWeb.StrengthLive do
           <% end %>
         </div>
       </div>
-      
+
     <!-- Grid below: ranks 11 to 34 -->
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <%= for rank <- Enum.slice(@ranks, 10, 24) do %>
@@ -94,12 +57,13 @@ defmodule TalentsWeb.StrengthLive do
         <option value="">Select talent</option>
         <%= for talent <- @talents do %>
           <option
-            value={talent}
-            selected={@selected_talents[@rank] == talent}
-            disabled={talent in Map.values(@selected_talents) && @selected_talents[@rank] != talent}
-          >
-            {talent}
-          </option>
+          value={talent.id}
+          selected={@selected_talents[@rank] == Integer.to_string(talent.id)}
+          disabled={Integer.to_string(talent.id) in Map.values(@selected_talents) &&
+                    @selected_talents[@rank] != Integer.to_string(talent.id)}
+        >
+          <%= talent.name %>
+        </option>
         <% end %>
       </select>
     </div>
@@ -107,9 +71,11 @@ defmodule TalentsWeb.StrengthLive do
   end
 
   def mount(_params, _session, socket) do
+    talents = Talents.get_talents()
+
     socket =
       socket
-      |> assign(:talents, @talents)
+      |> assign(:talents, talents)
       |> assign(:selected_talents, %{})
       |> assign(:ranks, Enum.map(1..34, &Integer.to_string/1))
 
