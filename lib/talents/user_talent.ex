@@ -12,10 +12,9 @@ defmodule Talents.UserTalent do
   end
 
   @doc false
-  def changeset(user_talent, attrs, user_scope) do
+  def changeset(user_talent, attrs) do
     user_talent
     |> cast(attrs, [:position])
     |> validate_required([:position])
-    |> put_change(:user_id, user_scope.user.id)
   end
 end
