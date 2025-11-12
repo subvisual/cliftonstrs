@@ -46,4 +46,13 @@ defmodule Talents do
       end)
     end)
   end
+
+  @doc """
+  Returns a map of a user's selected talents with their positions.
+  """
+  def get_user_positions(user_id) do
+    from(ut in UserTalent, where: ut.user_id == ^user_id)
+    |> Repo.all()
+    |> Map.new(fn ut -> {Integer.to_string(ut.position), Integer.to_string(ut.talent_id)} end)
+  end
 end

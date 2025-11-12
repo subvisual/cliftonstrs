@@ -73,12 +73,14 @@ defmodule TalentsWeb.StrengthLive do
   end
 
   def mount(_params, _session, socket) do
+    user_id = socket.assigns.current_scope.user.id
     talents = Talents.get_talents()
+    previous_select = Talents.get_user_positions(user_id)
 
     socket =
       socket
       |> assign(:talents, talents)
-      |> assign(:selected_talents, %{})
+      |> assign(:selected_talents, previous_select)
       |> assign(:ranks, Enum.map(1..34, &Integer.to_string/1))
 
     {:ok, socket}
