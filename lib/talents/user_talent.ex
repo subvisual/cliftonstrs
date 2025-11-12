@@ -14,7 +14,7 @@ defmodule Talents.UserTalent do
   @doc false
   def changeset(user_talent, attrs) do
     user_talent
-    |> cast(attrs, [:position])
-    |> validate_required([:position])
+    |> cast(attrs, [:position, :talent_id, :user_id])
+    |> validate_required([:position, :talent_id, :user_id])
   end
 end

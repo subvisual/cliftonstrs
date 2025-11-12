@@ -21,7 +21,7 @@ defmodule TalentsWeb.StrengthLive do
           <% end %>
         </div>
       </div>
-
+      
     <!-- Grid below: ranks 11 to 34 -->
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <%= for rank <- Enum.slice(@ranks, 10, 24) do %>
@@ -57,13 +57,15 @@ defmodule TalentsWeb.StrengthLive do
         <option value="">Select talent</option>
         <%= for talent <- @talents do %>
           <option
-          value={talent.id}
-          selected={@selected_talents[@rank] == Integer.to_string(talent.id)}
-          disabled={Integer.to_string(talent.id) in Map.values(@selected_talents) &&
-                    @selected_talents[@rank] != Integer.to_string(talent.id)}
-        >
-          <%= talent.name %>
-        </option>
+            value={talent.id}
+            selected={@selected_talents[@rank] == Integer.to_string(talent.id)}
+            disabled={
+              Integer.to_string(talent.id) in Map.values(@selected_talents) &&
+                @selected_talents[@rank] != Integer.to_string(talent.id)
+            }
+          >
+            {talent.name}
+          </option>
         <% end %>
       </select>
     </div>
@@ -92,6 +94,11 @@ defmodule TalentsWeb.StrengthLive do
   end
 
   def handle_event("save", _params, socket) do
+    user_id = socket.assigns.current_scope.user.id
+    selected = socket.assigns.selected_talents
+
+    Talents.save_user_talents(user_id, selected)
+
     {:noreply,
      socket
      |> put_flash(:info, "Strengths saved successfully!")
