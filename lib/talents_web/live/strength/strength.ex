@@ -8,7 +8,7 @@ defmodule TalentsWeb.Strength.StrengthLive do
     <h1 class="text-2xl font-bold mb-6">CliftonStrengths Ranking</h1>
 
     <!-- The key fix: phx-change moved to the form -->
-    <form phx-change="select_talent" phx-submit="save" class="space-y-8">
+    <form phx-submit="save" class="space-y-8">
       <!-- Two columns: ranks 1 to 5 (left), 6 to 10 (right) -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
@@ -35,7 +35,7 @@ defmodule TalentsWeb.Strength.StrengthLive do
           <% end %>
         </div>
       </div>
-
+      
     <!-- Grid below: ranks 11 to 34 -->
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <%= for rank <- Enum.slice(@ranks, 10, 24) do %>
@@ -76,18 +76,15 @@ defmodule TalentsWeb.Strength.StrengthLive do
     {:ok, socket}
   end
 
-  def handle_event("select_talent", params, socket) do
+  def handle_event("select_talent", %{"_target" => [changed_key]} = params, socket) do
+    rank = String.slice(changed_key, 7..-1//1)
+    talent = Map.get(params, changed_key, "")
+
     selected =
-      Enum.reduce(params, socket.assigns.selected_talents, fn
-        {"talent_" <> rank, talent}, acc when talent != "" ->
-          Map.put(acc, rank, talent)
-
-        {"talent_" <> rank, ""}, acc ->
-          Map.delete(acc, rank)
-
-        _, acc ->
-          acc
-      end)
+      case talent do
+        "" -> Map.delete(socket.assigns.selected_talents, rank)
+        _ -> Map.put(socket.assigns.selected_talents, rank, talent)
+      end
 
     {:noreply, assign(socket, :selected_talents, selected)}
   end

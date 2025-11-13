@@ -12,6 +12,7 @@ defmodule TalentsWeb.Strength.RankSelectComponent do
       <span class="font-bold w-8">{@rank}.</span>
       <select
         name={"talent_#{@rank}"}
+        phx-change="select_talent"
         class="border rounded p-2 flex-1 bg-white text-gray-900 dark:text-gray-100"
       >
         <option value="">Select talent</option>
