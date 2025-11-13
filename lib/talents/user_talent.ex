@@ -5,8 +5,8 @@ defmodule Talents.UserTalent do
   schema "user_talents" do
     field :position, :integer
 
-    belongs_to :user, Talents.Talent, foreign_key: :talent_id
-    belongs_to :admin, Talents.Accounts.User, foreign_key: :user_id
+    belongs_to :talent, Talents.Talent, foreign_key: :talent_id
+    belongs_to :user, Talents.Accounts.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end
@@ -14,7 +14,7 @@ defmodule Talents.UserTalent do
   @doc false
   def changeset(user_talent, attrs) do
     user_talent
-    |> cast(attrs, [:position])
-    |> validate_required([:position])
+    |> cast(attrs, [:position, :talent_id, :user_id])
+    |> validate_required([:position, :talent_id, :user_id])
   end
 end
