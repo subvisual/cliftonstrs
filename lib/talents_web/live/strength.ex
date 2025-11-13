@@ -1,6 +1,8 @@
 defmodule TalentsWeb.StrengthLive do
   use TalentsWeb, :live_view
 
+  @talent_ranks 34
+
   def render(assigns) do
     ~H"""
     <h1 class="text-2xl font-bold mb-6">CliftonStrengths Ranking</h1>
@@ -81,7 +83,7 @@ defmodule TalentsWeb.StrengthLive do
       socket
       |> assign(:talents, talents)
       |> assign(:selected_talents, previous_select)
-      |> assign(:ranks, Enum.map(1..34, &Integer.to_string/1))
+      |> assign(:ranks, Enum.map(1..@talent_ranks, &Integer.to_string/1))
 
     {:ok, socket}
   end
