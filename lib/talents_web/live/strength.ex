@@ -21,7 +21,7 @@ defmodule TalentsWeb.StrengthLive do
           <% end %>
         </div>
       </div>
-      
+
     <!-- Grid below: ranks 11 to 34 -->
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <%= for rank <- Enum.slice(@ranks, 10, 24) do %>
@@ -88,9 +88,16 @@ defmodule TalentsWeb.StrengthLive do
 
   def handle_event("select_talent", params, socket) do
     selected =
-      params
-      |> Enum.filter(fn {key, talent} -> String.starts_with?(key, "talent_") and talent != "" end)
-      |> Map.new(fn {"talent_" <> rank, talent} -> {rank, talent} end)
+      Enum.reduce(params, socket.assigns.selected_talents, fn
+        {"talent_" <> rank, talent}, acc when talent != "" ->
+          Map.put(acc, rank, talent)
+
+        {"talent_" <> rank, ""}, acc ->
+          Map.delete(acc, rank)
+
+        _, acc ->
+          acc
+      end)
 
     {:noreply, assign(socket, :selected_talents, selected)}
   end
