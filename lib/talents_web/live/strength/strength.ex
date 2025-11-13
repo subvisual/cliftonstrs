@@ -1,4 +1,4 @@
-defmodule TalentsWeb.StrengthLive do
+defmodule TalentsWeb.Strength.StrengthLive do
   use TalentsWeb, :live_view
 
   @talent_ranks 34
@@ -13,13 +13,25 @@ defmodule TalentsWeb.StrengthLive do
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <%= for rank <- Enum.slice(@ranks, 0, 5) do %>
-            <.rank_select rank={rank} talents={@talents} selected_talents={@selected_talents} />
+            <.live_component
+              module={TalentsWeb.Strength.RankSelectComponent}
+              id={"rank_select_#{rank}"}
+              rank={rank}
+              talents={@talents}
+              selected_talents={@selected_talents}
+            />
           <% end %>
         </div>
 
         <div>
           <%= for rank <- Enum.slice(@ranks, 5, 5) do %>
-            <.rank_select rank={rank} talents={@talents} selected_talents={@selected_talents} />
+            <.live_component
+              module={TalentsWeb.Strength.RankSelectComponent}
+              id={"rank_select_#{rank}"}
+              rank={rank}
+              talents={@talents}
+              selected_talents={@selected_talents}
+            />
           <% end %>
         </div>
       </div>
@@ -27,7 +39,13 @@ defmodule TalentsWeb.StrengthLive do
     <!-- Grid below: ranks 11 to 34 -->
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <%= for rank <- Enum.slice(@ranks, 10, 24) do %>
-          <.rank_select rank={rank} talents={@talents} selected_talents={@selected_talents} />
+          <.live_component
+            module={TalentsWeb.Strength.RankSelectComponent}
+            id={"rank_select_#{rank}"}
+            rank={rank}
+            talents={@talents}
+            selected_talents={@selected_talents}
+          />
         <% end %>
       </div>
 
@@ -41,36 +59,6 @@ defmodule TalentsWeb.StrengthLive do
         </button>
       </div>
     </form>
-    """
-  end
-
-  attr :rank, :string, required: true
-  attr :talents, :list, required: true
-  attr :selected_talents, :map, required: true
-
-  defp rank_select(assigns) do
-    ~H"""
-    <div class="flex items-center mb-3">
-      <span class="font-bold w-8">{@rank}.</span>
-      <select
-        name={"talent_#{@rank}"}
-        class="border rounded p-2 flex-1 bg-white text-gray-900 dark:text-gray-100"
-      >
-        <option value="">Select talent</option>
-        <%= for talent <- @talents do %>
-          <option
-            value={talent.id}
-            selected={@selected_talents[@rank] == Integer.to_string(talent.id)}
-            disabled={
-              Integer.to_string(talent.id) in Map.values(@selected_talents) &&
-                @selected_talents[@rank] != Integer.to_string(talent.id)
-            }
-          >
-            {talent.name}
-          </option>
-        <% end %>
-      </select>
-    </div>
     """
   end
 
