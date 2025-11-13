@@ -77,6 +77,7 @@ defmodule TalentsWeb.Strength.StrengthLive do
   end
 
   def handle_event("select_talent", %{"_target" => [changed_key]} = params, socket) do
+    # changed_key == "talent_N"
     rank = String.slice(changed_key, 7..-1//1)
     talent = Map.get(params, changed_key, "")
 
