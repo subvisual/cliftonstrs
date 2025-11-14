@@ -12,7 +12,7 @@ defmodule Talents.OrgUser do
   @doc false
   def changeset(org_user, attrs) do
     org_user
-    |> cast(attrs, [])
-    |> validate_required([:organization, :user])
+    |> cast(attrs, [:org_id, :user_id])
+    |> validate_required([:org_id, :user_id])
   end
 end

@@ -9,7 +9,7 @@ defmodule Talents do
 
   import Ecto.Query, warn: false
   alias Talents.Repo
-  alias Talents.{UserTalent, Talent}
+  alias Talents.{UserTalent, Talent, OrgUser, Organization}
 
   @doc """
   Returns a list of all talents with only their id and name.
@@ -54,5 +54,18 @@ defmodule Talents do
     from(ut in UserTalent, where: ut.user_id == ^user_id)
     |> Repo.all()
     |> Map.new(fn ut -> {Integer.to_string(ut.position), Integer.to_string(ut.talent_id)} end)
+  end
+
+  @doc """
+  Returns a list of organizatons that a user is member.
+  """
+  def get_user_organizations(user_id) do
+    from(o in Organization,
+      join: ou in OrgUser,
+      on: ou.org_id == o.id,
+      where: ou.user_id == ^user_id,
+      preload: [:admin, :users]
+    )
+    |> Repo.all()
   end
 end
