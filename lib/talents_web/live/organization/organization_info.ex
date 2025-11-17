@@ -5,7 +5,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   def render(assigns) do
     ~H"""
     <div class="p-6 max-w-3xl mx-auto space-y-6">
-
+      
     <!-- Organization Header -->
       <div class="flex items-center space-x-4">
         <img
@@ -21,7 +21,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           </p>
         </div>
       </div>
-
+      
     <!-- Member List -->
       <div>
         <h2 class="text-xl font-semibold mb-2">Members</h2>
@@ -84,6 +84,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   @impl true
   def mount(%{"id" => id}, _session, socket) do
     org = Talents.get_organization_info(id)
+    IO.inspect(org)
 
     {:ok, assign(socket, :organization, org)}
   end
@@ -107,7 +108,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
     org_id = socket.assigns.organization.id
     new_admin_id = String.to_integer(user_id)
 
-    Talents.update_admin(org_id,new_admin_id)
+    Talents.update_admin(org_id, new_admin_id)
 
     org = Talents.get_organization_info(org_id)
 

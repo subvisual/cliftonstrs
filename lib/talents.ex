@@ -64,6 +64,7 @@ defmodule Talents do
       join: ou in OrgUser,
       on: ou.org_id == o.id,
       where: ou.user_id == ^user_id,
+      order_by: [asc: o.name],
       preload: [:admin, :users]
     )
     |> Repo.all()
@@ -79,12 +80,23 @@ defmodule Talents do
   end
 
   @doc """
-  Get the information of a organizaton.
+  Get the information of an organization with members ordered: admin first, then alphabetically.
   """
   def get_organization_info(org_id) do
-    Organization
-    |> Repo.get!(org_id)
-    |> Repo.preload([:admin, :users])
+    org = Repo.get!(Organization, org_id)
+
+    users_query =
+      from u in Talents.Accounts.User,
+        join: ou in OrgUser,
+        on: ou.user_id == u.id,
+        where: ou.org_id == ^org.id,
+        order_by: [
+          desc: fragment("? = ?", u.id, ^org.admin_id),
+          asc: u.name
+        ],
+        select: u
+
+    Repo.preload(org, [:admin, users: users_query])
   end
 
   @doc """
