@@ -18,7 +18,7 @@ defmodule Talents.Organization do
   @doc false
   def changeset(organization, attrs) do
     organization
-    |> cast(attrs, [:name, :avatar])
-    |> validate_required([:name, :avatar])
+    |> cast(attrs, [:name, :avatar, :admin_id])
+    |> validate_required([:name, :avatar, :admin_id])
   end
 end

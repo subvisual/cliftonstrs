@@ -21,6 +21,15 @@ defmodule TalentsWeb.Organization.OrganizationLive do
           <% end %>
         </ul>
       <% end %>
+
+      <div class="mt-6">
+        <.link
+          patch={~p"/users/organizations/create"}
+          class="px-3 py-2 bg-blue-600 mt-6 text-white rounded"
+        >
+          + Create Organization
+        </.link>
+      </div>
     </div>
     """
   end

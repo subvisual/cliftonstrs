@@ -68,4 +68,13 @@ defmodule Talents do
     )
     |> Repo.all()
   end
+
+  @doc """
+  Create a new organizaton.
+  """
+  def create_organization(attrs) do
+    %Organization{}
+    |> Organization.changeset(attrs)
+    |> Repo.insert()
+  end
 end
