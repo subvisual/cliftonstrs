@@ -96,4 +96,12 @@ defmodule Talents do
     )
     |> Repo.delete_all()
   end
+
+  @doc """
+  Update admin from a organizaton.
+  """
+  def update_admin(org_id, new_admin_id) do
+    from(o in Organization, where: o.id == ^org_id)
+    |> Repo.update_all(set: [admin_id: new_admin_id])
+  end
 end

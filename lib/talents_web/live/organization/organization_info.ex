@@ -53,6 +53,17 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
 
                 <%= if @current_scope.user.id == @organization.admin_id and user.id != @organization.admin_id do %>
                   <.button
+                    phx-click="update_admin"
+                    phx-value-user-id={user.id}
+                    data-confirm="Are you sure you want to make this user the new admin?"
+                    class="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 px-2 py-1 rounded text-xs"
+                  >
+                    Make Admin
+                  </.button>
+                <% end %>
+
+                <%= if @current_scope.user.id == @organization.admin_id and user.id != @organization.admin_id do %>
+                  <.button
                     phx-click="remove_member"
                     phx-value-user-id={user.id}
                     data-confirm="Are you sure you want to remove this member?"
@@ -82,6 +93,21 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
     org_id = socket.assigns.organization.id
 
     Talents.remove_member(org_id, String.to_integer(user_id))
+
+    org = Talents.get_organization_info(org_id)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Member removed!")
+     |> assign(:organization, org)}
+  end
+
+  @impl true
+  def handle_event("update_admin", %{"user-id" => user_id}, socket) do
+    org_id = socket.assigns.organization.id
+    new_admin_id = String.to_integer(user_id)
+
+    Talents.update_admin(org_id,new_admin_id)
 
     org = Talents.get_organization_info(org_id)
 
