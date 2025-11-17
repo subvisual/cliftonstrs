@@ -77,4 +77,23 @@ defmodule Talents do
     |> Organization.changeset(attrs)
     |> Repo.insert()
   end
+
+  @doc """
+  Get the information of a organizaton.
+  """
+  def get_organization_info(org_id) do
+    Organization
+    |> Repo.get!(org_id)
+    |> Repo.preload([:admin, :users])
+  end
+
+  @doc """
+  Remove a member from a organizaton.
+  """
+  def remove_member(org_id, user_id) do
+    from(ou in OrgUser,
+      where: ou.org_id == ^org_id and ou.user_id == ^user_id
+    )
+    |> Repo.delete_all()
+  end
 end

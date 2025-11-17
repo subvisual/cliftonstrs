@@ -1,8 +1,6 @@
 defmodule TalentsWeb.Organization.OrganizationInfo do
   use TalentsWeb, :live_view
 
-  alias Talents.{Repo, Organization}
-
   @impl true
   def render(assigns) do
     ~H"""
@@ -52,6 +50,17 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
                 >
                   Admin
                 </span>
+
+                <%= if @current_scope.user.id == @organization.admin_id and user.id != @organization.admin_id do %>
+                  <.button
+                    phx-click="remove_member"
+                    phx-value-user-id={user.id}
+                    data-confirm="Are you sure you want to remove this member?"
+                    class="bg-red-100 text-red-600 hover:bg-red-200 px-2 py-1 rounded text-xs"
+                  >
+                    Remove
+                  </.button>
+                <% end %>
               </li>
             <% end %>
           </ul>
@@ -63,11 +72,22 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
-    org =
-      Organization
-      |> Repo.get!(id)
-      |> Repo.preload([:admin, :users])
+    org = Talents.get_organization_info(id)
 
     {:ok, assign(socket, :organization, org)}
+  end
+
+  @impl true
+  def handle_event("remove_member", %{"user-id" => user_id}, socket) do
+    org_id = socket.assigns.organization.id
+
+    Talents.remove_member(org_id, String.to_integer(user_id))
+
+    org = Talents.get_organization_info(org_id)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Member removed!")
+     |> assign(:organization, org)}
   end
 end
