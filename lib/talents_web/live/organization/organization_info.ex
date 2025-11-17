@@ -5,7 +5,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   def render(assigns) do
     ~H"""
     <div class="p-6 max-w-3xl mx-auto space-y-6">
-      
+
     <!-- Organization Header -->
       <div class="flex items-center space-x-4">
         <img
@@ -21,7 +21,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           </p>
         </div>
       </div>
-      
+
     <!-- Member List -->
       <div>
         <h2 class="text-xl font-semibold mb-2">Members</h2>
@@ -77,6 +77,15 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           </ul>
         <% end %>
       </div>
+      <%= if @current_scope.user.id == @organization.admin_id do %>
+        <.button
+          phx-click="delete_organization"
+          data-confirm="Are you sure you want to delete this organization? This cannot be undone."
+          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+        >
+          Delete Organization
+        </.button>
+      <% end %>
     </div>
     """
   end
@@ -84,7 +93,6 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   @impl true
   def mount(%{"id" => id}, _session, socket) do
     org = Talents.get_organization_info(id)
-    IO.inspect(org)
 
     {:ok, assign(socket, :organization, org)}
   end
@@ -116,5 +124,17 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
      socket
      |> put_flash(:info, "Member removed!")
      |> assign(:organization, org)}
+  end
+
+  @impl true
+  def handle_event("delete_organization", _params, socket) do
+    org = socket.assigns.organization
+
+    Talents.delete_organization(org)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Organization deleted successfully.")
+     |> push_navigate(to: ~p"/users/organizations")}
   end
 end
