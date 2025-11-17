@@ -7,7 +7,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   def render(assigns) do
     ~H"""
     <div class="p-6 max-w-3xl mx-auto space-y-6">
-      
+
     <!-- Organization Header -->
       <div class="flex items-center space-x-4">
         <img
@@ -23,7 +23,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           </p>
         </div>
       </div>
-      
+
     <!-- Member List -->
       <div>
         <h2 class="text-xl font-semibold mb-2">Members</h2>
@@ -38,6 +38,13 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
                   <p class="font-semibold">{user.name}</p>
                   <p class="text-gray-600 text-sm">{user.email}</p>
                 </div>
+
+                <span
+                  :if={user.id == @current_scope.user.id}
+                  class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded"
+                >
+                  You
+                </span>
 
                 <span
                   :if={user.id == @organization.admin_id}
