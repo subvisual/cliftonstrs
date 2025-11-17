@@ -13,10 +13,12 @@ defmodule TalentsWeb.Organization.OrganizationLive do
         <ul class="space-y-3">
           <%= for org <- @organizations do %>
             <li class="p-3 border rounded">
-              <div class="font-semibold">{org.name}</div>
-              <div class="text-sm text-gray-600">
-                Admin: {org.admin.name}
-              </div>
+              <.link navigate={~p"/users/organizations/#{org.id}"}>
+                <div class="font-semibold">{org.name}</div>
+                <div class="text-sm text-gray-600">
+                  Admin: {org.admin.name}
+                </div>
+              </.link>
             </li>
           <% end %>
         </ul>

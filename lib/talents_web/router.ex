@@ -57,6 +57,7 @@ defmodule TalentsWeb.Router do
       live "/users/strengths", Strength.StrengthLive, :index
       live "/users/organizations", Organization.OrganizationLive, :index
       live "/users/organizations/create", Organization.OrganizationCreate, :new
+      live "/users/organizations/:id", Organization.OrganizationInfo, :show
     end
 
     post "/users/update-password", UserSessionController, :update_password
