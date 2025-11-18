@@ -126,4 +126,13 @@ defmodule Talents do
 
     Repo.delete!(org)
   end
+
+  @doc """
+  Update an organizaton.
+  """
+  def update_organization(org, attrs) do
+    org
+    |> Organization.changeset(attrs)
+    |> Repo.update()
+  end
 end
