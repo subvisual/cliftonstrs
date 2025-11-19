@@ -22,7 +22,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
         </div>
       </div>
 
-      <%= if @current_scope.user.id == @organization.admin_id do %>
+      <%= if @is_admin? do %>
         <.link
           navigate={~p"/users/organizations/#{@organization.id}/edit"}
           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -60,7 +60,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
                   Admin
                 </span>
 
-                <%= if @current_scope.user.id == @organization.admin_id and user.id != @organization.admin_id do %>
+                <%= if @is_admin? and user.id != @organization.admin_id do %>
                   <.button
                     phx-click="update_admin"
                     phx-value-user-id={user.id}
@@ -71,7 +71,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
                   </.button>
                 <% end %>
 
-                <%= if @current_scope.user.id == @organization.admin_id and user.id != @organization.admin_id do %>
+                <%= if @is_admin? and user.id != @organization.admin_id do %>
                   <.button
                     phx-click="remove_member"
                     phx-value-user-id={user.id}
@@ -86,7 +86,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           </ul>
         <% end %>
       </div>
-      <%= if @current_scope.user.id == @organization.admin_id do %>
+      <%= if @is_admin? do %>
         <.button
           phx-click="delete_organization"
           data-confirm="Are you sure you want to delete this organization? This cannot be undone."
@@ -102,8 +102,14 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   @impl true
   def mount(%{"id" => id}, _session, socket) do
     org = Talents.get_organization_info(id)
+    is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
-    {:ok, assign(socket, :organization, org)}
+    socket =
+      socket
+      |> assign(:organization, org)
+      |> assign(:is_admin?, is_admin?)
+
+    {:ok, socket}
   end
 
   @impl true
@@ -113,11 +119,13 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
     Talents.remove_member(org_id, String.to_integer(user_id))
 
     org = Talents.get_organization_info(org_id)
+    is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
     {:noreply,
      socket
      |> put_flash(:info, "Member removed!")
-     |> assign(:organization, org)}
+     |> assign(:organization, org)
+     |> assign(:is_admin?, is_admin?)}
   end
 
   @impl true
@@ -128,11 +136,13 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
     Talents.update_admin(org_id, new_admin_id)
 
     org = Talents.get_organization_info(org_id)
+    is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
     {:noreply,
      socket
      |> put_flash(:info, "Member removed!")
-     |> assign(:organization, org)}
+     |> assign(:organization, org)
+     |> assign(:is_admin?, is_admin?)}
   end
 
   @impl true
