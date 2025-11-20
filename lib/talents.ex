@@ -118,7 +118,7 @@ defmodule Talents do
   end
 
   @doc """
-  Delete an organizaton.
+  Delete an organization.
   """
   def delete_organization(org) do
     from(ou in OrgUser, where: ou.org_id == ^org.id)

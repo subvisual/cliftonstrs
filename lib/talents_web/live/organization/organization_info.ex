@@ -5,7 +5,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   def render(assigns) do
     ~H"""
     <div class="p-6 max-w-3xl mx-auto space-y-6">
-      
+
     <!-- Organization Header -->
       <div class="flex items-center space-x-4">
         <img
@@ -30,7 +30,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           Edit Organization
         </.link>
       <% end %>
-      
+
     <!-- Member List -->
       <div>
         <h2 class="text-xl font-semibold mt-2 mb-2">Members</h2>
@@ -140,7 +140,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
 
     {:noreply,
      socket
-     |> put_flash(:info, "Member removed!")
+     |> put_flash(:info, "Admin updated!")
      |> assign(:organization, org)
      |> assign(:is_admin?, is_admin?)}
   end
