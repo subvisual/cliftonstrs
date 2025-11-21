@@ -1,4 +1,5 @@
 defmodule TalentsWeb.Strength.StrengthLive do
+  alias Talents.TalentContext
   use TalentsWeb, :live_view
 
   @talent_ranks 34
@@ -64,8 +65,8 @@ defmodule TalentsWeb.Strength.StrengthLive do
 
   def mount(_params, _session, socket) do
     user_id = socket.assigns.current_scope.user.id
-    talents = Talents.get_talents()
-    previous_select = Talents.get_user_positions(user_id)
+    talents = TalentContext.list_talents()
+    previous_select = TalentContext.get_user_positions(user_id)
 
     socket =
       socket
@@ -94,7 +95,7 @@ defmodule TalentsWeb.Strength.StrengthLive do
     user_id = socket.assigns.current_scope.user.id
     selected = socket.assigns.selected_talents
 
-    Talents.save_user_talents(user_id, selected)
+    TalentContext.save_user_talents(user_id, selected)
 
     {:noreply,
      socket
