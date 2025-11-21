@@ -13,9 +13,7 @@ defmodule Talents.Talent do
     :i_bring,
     :i_need,
     :metaphor_image,
-    :barrier_label,
-    :text_contrast_one,
-    :text_contrast_two
+    :barrier_label
   ]
 
   schema "talents" do
@@ -30,8 +28,9 @@ defmodule Talents.Talent do
     field :i_need, :string
     field :metaphor_image, :string
     field :barrier_label, :string
-    field :text_contrast_one, :string
-    field :text_contrast_two, :string
+
+    has_many :contrasts, Talents.Contrast, foreign_key: :talent_id
+    has_many :contrasted_with, Talents.Contrast, foreign_key: :contrast_id
 
     timestamps(type: :utc_datetime)
   end

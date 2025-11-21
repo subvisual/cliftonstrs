@@ -12,6 +12,7 @@
 
 alias Talents.Repo
 alias Talents.Talent
+alias Talents.Contrast
 
 talents = %{
   1 => %{
@@ -621,8 +622,39 @@ talents = %{
   }
 }
 
-Enum.each(talents, fn {_, attrs} ->
-  %Talent{}
-  |> Talent.changeset(attrs)
-  |> Repo.insert!()
+talent_records =
+  Enum.map(talents, fn {_, attrs} ->
+    contrasts = Map.take(attrs, [:text_contrast_one, :text_contrast_two])
+    attrs = Map.drop(attrs, [:text_contrast_one, :text_contrast_two])
+
+    talent =
+      %Talent{}
+      |> Talent.changeset(attrs)
+      |> Repo.insert!()
+
+    {talent, contrasts}
+  end)
+
+Enum.each(talent_records, fn {talent, contrasts} ->
+  Enum.each(contrasts, fn
+    {_, phrase} ->
+      # Format: "TalentName: ... / ContrastName: ..."
+      [_talent_phrase, contrast_phrase] = String.split(phrase, "/")
+
+      contrast_name =
+        contrast_phrase
+        |> String.trim()
+        |> String.split(":")
+        |> hd()
+
+      contrast_talent = Repo.get_by!(Talent, name: contrast_name)
+
+      %Contrast{}
+      |> Contrast.changeset(%{
+        talent_id: talent.id,
+        contrast_id: contrast_talent.id,
+        phrase: phrase
+      })
+      |> Repo.insert!()
+  end)
 end)
