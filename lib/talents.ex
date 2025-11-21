@@ -8,6 +8,7 @@ defmodule Talents do
   """
 
   import Ecto.Query, warn: false
+  alias Talents.Accounts.User
   alias Talents.Repo
   alias Talents.{UserTalent, Talent, OrgUser, Organization}
 
@@ -86,7 +87,7 @@ defmodule Talents do
     org = Repo.get!(Organization, org_id)
 
     users_query =
-      from u in Talents.Accounts.User,
+      from u in User,
         join: ou in OrgUser,
         on: ou.user_id == u.id,
         where: ou.org_id == ^org.id,
@@ -100,7 +101,11 @@ defmodule Talents do
   end
 
   @doc """
-  Remove a member from a organizaton.
+  Removes a user from an organization.
+
+  Returns `{count, _}` where:
+    * `{1, _}` — the user was removed (row deleted)
+    * `{0, _}` — the user was not a member (no row deleted)
   """
   def remove_member(org_id, user_id) do
     from(ou in OrgUser,
@@ -110,10 +115,18 @@ defmodule Talents do
   end
 
   @doc """
-  Update admin from a organizaton.
+  Changes the organization admin, but only if the new admin is already a member.
+
+  Returns `{count, _}` where:
+    * `{1, _}` — admin updated successfully
+    * `{0, _}` — update blocked because the user is not a member
   """
   def update_admin(org_id, new_admin_id) do
-    from(o in Organization, where: o.id == ^org_id)
+    from(o in Organization,
+      where: o.id == ^org_id,
+      join: ou in OrgUser,
+      on: ou.org_id == o.id and ou.user_id == ^new_admin_id
+    )
     |> Repo.update_all(set: [admin_id: new_admin_id])
   end
 
@@ -121,10 +134,12 @@ defmodule Talents do
   Delete an organization.
   """
   def delete_organization(org) do
-    from(ou in OrgUser, where: ou.org_id == ^org.id)
-    |> Repo.delete_all()
+    Repo.transact(fn ->
+      from(ou in OrgUser, where: ou.org_id == ^org.id)
+      |> Repo.delete_all()
 
-    Repo.delete!(org)
+      Repo.delete!(org)
+    end)
   end
 
   @doc """

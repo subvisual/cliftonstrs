@@ -5,7 +5,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   def render(assigns) do
     ~H"""
     <div class="p-6 max-w-3xl mx-auto space-y-6">
-
+      
     <!-- Organization Header -->
       <div class="flex items-center space-x-4">
         <img
@@ -30,7 +30,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           Edit Organization
         </.link>
       <% end %>
-
+      
     <!-- Member List -->
       <div>
         <h2 class="text-xl font-semibold mt-2 mb-2">Members</h2>
@@ -115,17 +115,24 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   @impl true
   def handle_event("remove_member", %{"user-id" => user_id}, socket) do
     org_id = socket.assigns.organization.id
+    user_id = String.to_integer(user_id)
 
-    Talents.remove_member(org_id, String.to_integer(user_id))
+    case Talents.remove_member(org_id, user_id) do
+      {1, _} ->
+        org = Talents.get_organization_info(org_id)
+        is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
-    org = Talents.get_organization_info(org_id)
-    is_admin? = org.admin_id == socket.assigns.current_scope.user.id
+        {:noreply,
+         socket
+         |> put_flash(:info, "Member removed!")
+         |> assign(:organization, org)
+         |> assign(:is_admin?, is_admin?)}
 
-    {:noreply,
-     socket
-     |> put_flash(:info, "Member removed!")
-     |> assign(:organization, org)
-     |> assign(:is_admin?, is_admin?)}
+      {0, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "Could not remove member.")}
+    end
   end
 
   @impl true
@@ -133,27 +140,37 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
     org_id = socket.assigns.organization.id
     new_admin_id = String.to_integer(user_id)
 
-    Talents.update_admin(org_id, new_admin_id)
+    case Talents.update_admin(org_id, new_admin_id) do
+      {1, _} ->
+        org = Talents.get_organization_info(org_id)
+        is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
-    org = Talents.get_organization_info(org_id)
-    is_admin? = org.admin_id == socket.assigns.current_scope.user.id
+        {:noreply,
+         socket
+         |> put_flash(:info, "Admin updated!")
+         |> assign(:organization, org)
+         |> assign(:is_admin?, is_admin?)}
 
-    {:noreply,
-     socket
-     |> put_flash(:info, "Admin updated!")
-     |> assign(:organization, org)
-     |> assign(:is_admin?, is_admin?)}
+      {0, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "Admin update failed — this user is not a member.")}
+    end
   end
 
   @impl true
   def handle_event("delete_organization", _params, socket) do
     org = socket.assigns.organization
 
-    Talents.delete_organization(org)
+    case Talents.delete_organization(org) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Organization deleted successfully.")
+         |> push_navigate(to: ~p"/users/organizations")}
 
-    {:noreply,
-     socket
-     |> put_flash(:info, "Organization deleted successfully.")
-     |> push_navigate(to: ~p"/users/organizations")}
+      {:error, _} ->
+        put_flash(socket, :error, "Delete Organization was not possible.")
+    end
   end
 end
