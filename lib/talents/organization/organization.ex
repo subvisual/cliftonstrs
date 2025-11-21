@@ -1,4 +1,4 @@
-defmodule Talents.Organization do
+defmodule Talents.Organization.Organization do
   use Ecto.Schema
   import Ecto.Changeset
 
