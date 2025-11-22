@@ -5,7 +5,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   def render(assigns) do
     ~H"""
     <div class="p-6 max-w-3xl mx-auto space-y-6">
-      
+
     <!-- Organization Header -->
       <div class="flex items-center space-x-4">
         <img
@@ -30,7 +30,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           Edit Organization
         </.link>
       <% end %>
-      
+
     <!-- Member List -->
       <div>
         <h2 class="text-xl font-semibold mt-2 mb-2">Members</h2>
@@ -166,11 +166,10 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
       {:ok, _} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Organization deleted successfully.")
          |> push_navigate(to: ~p"/users/organizations")}
 
-      {:error, _} ->
-        put_flash(socket, :error, "Delete Organization was not possible.")
+      {:error, reason} ->
+        {:noreply,put_flash(socket,:error, "Delete failed: #{inspect(reason)}")}
     end
   end
 end

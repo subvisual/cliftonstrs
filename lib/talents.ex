@@ -138,7 +138,7 @@ defmodule Talents do
       from(ou in OrgUser, where: ou.org_id == ^org.id)
       |> Repo.delete_all()
 
-      Repo.delete!(org)
+      Repo.delete(org)
     end)
   end
 
