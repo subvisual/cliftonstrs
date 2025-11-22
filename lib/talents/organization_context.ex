@@ -95,7 +95,7 @@ defmodule Talents.OrganizationContext do
       %Todo{...}
 
   """
-  def change_organization(%Organization{} = organization, _attrs \\ %{}) do
-    raise "TODO"
+  def change_organization(%Organization{} = organization, attrs \\ %{}) do
+    Organization.changeset(organization, attrs)
   end
 end

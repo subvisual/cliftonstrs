@@ -95,8 +95,8 @@ defmodule Talents.TalentContext do
       %Todo{...}
 
   """
-  def change_talent(%Talent{} = talent, _attrs \\ %{}) do
-    raise "TODO"
+  def change_talent(%Talent{} = talent, attrs \\ %{}) do
+    Talent.changeset(talent,attrs)
   end
 
   @doc """
