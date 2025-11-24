@@ -2,7 +2,7 @@ defmodule Talents.Repo.Migrations.CreateContrasts do
   use Ecto.Migration
 
   def change do
-    create table(:contrasts) do
+    create table(:contrasts, primary_key: false) do
       add :talent_id, references(:talents, on_delete: :delete_all), null: false
       add :contrast_id, references(:talents, on_delete: :delete_all), null: false
       add :phrase, :string
