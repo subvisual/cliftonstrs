@@ -2,9 +2,10 @@ defmodule Talents.Organization.OrgUser do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key false
   schema "org_users" do
-    belongs_to :organization, Talents.Organization.Organization, foreign_key: :org_id
-    belongs_to :user, Talents.Accounts.User, foreign_key: :user_id
+    belongs_to :organization, Talents.Organization.Organization, foreign_key: :org_id, primary_key: true
+    belongs_to :user, Talents.Accounts.User, foreign_key: :user_id, primary_key: true
 
     timestamps(type: :utc_datetime)
   end
