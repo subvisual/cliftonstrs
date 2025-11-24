@@ -6,7 +6,7 @@ defmodule Talents.TalentContext do
   import Ecto.Query, warn: false
   alias Talents.Repo
 
-  alias Talents.Talent.{UserTalent, Talent}
+  alias Talents.Talent.{UserTalent, Talent, Contrast}
 
   @doc """
   Returns the list of talents.
@@ -133,5 +133,14 @@ defmodule Talents.TalentContext do
     from(ut in UserTalent, where: ut.user_id == ^user_id)
     |> Repo.all()
     |> Map.new(fn ut -> {Integer.to_string(ut.position), Integer.to_string(ut.talent_id)} end)
+  end
+
+  @doc """
+  Creates a contrast.
+  """
+  def create_contrast(attrs) do
+    %Contrast{}
+    |> Contrast.changeset(attrs)
+    |> Repo.insert()
   end
 end

@@ -29,8 +29,8 @@ defmodule Talents.Talent.Talent do
     field :metaphor_image, :string
     field :barrier_label, :string
 
-    has_many :contrasts, Talents.Contrast, foreign_key: :talent_id
-    has_many :contrasted_with, Talents.Contrast, foreign_key: :contrast_id
+    has_many :contrasts, Talents.Talent.Contrast, foreign_key: :talent_id
+    has_many :contrasted_with, Talents.Talent.Contrast, foreign_key: :contrast_id
 
     timestamps(type: :utc_datetime)
   end

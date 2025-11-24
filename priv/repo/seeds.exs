@@ -12,7 +12,7 @@
 
 alias Talents.Repo
 alias Talents.Talent.Talent
-alias Talents.Talent.Contrast
+alias Talents.TalentContext
 
 talents = %{
   1 => %{
@@ -627,10 +627,7 @@ talent_records =
     contrasts = Map.take(attrs, [:text_contrast_one, :text_contrast_two])
     attrs = Map.drop(attrs, [:text_contrast_one, :text_contrast_two])
 
-    talent =
-      %Talent{}
-      |> Talent.changeset(attrs)
-      |> Repo.insert!()
+    {:ok,talent} = TalentContext.create_talent(attrs)
 
     {talent, contrasts}
   end)
@@ -649,12 +646,10 @@ Enum.each(talent_records, fn {talent, contrasts} ->
 
       contrast_talent = Repo.get_by!(Talent, name: contrast_name)
 
-      %Contrast{}
-      |> Contrast.changeset(%{
+      TalentContext.create_contrast(%{
         talent_id: talent.id,
         contrast_id: contrast_talent.id,
         phrase: phrase
       })
-      |> Repo.insert!()
   end)
 end)
