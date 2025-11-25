@@ -39,31 +39,31 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           <p class="text-gray-600">No members yet.</p>
         <% else %>
           <ul class="space-y-3">
-            <%= for user <- @organization.users do %>
+            <%= for orguser <- @organization.users do %>
               <li class="p-3 border rounded flex items-center space-x-3">
                 <div class="flex-1">
-                  <p class="font-semibold">{user.name}</p>
-                  <p class="text-gray-600 text-sm">{user.email}</p>
+                  <p class="font-semibold">{orguser.name}</p>
+                  <p class="text-gray-600 text-sm">{orguser.email}</p>
                 </div>
 
                 <span
-                  :if={user.id == @current_scope.user.id}
+                  :if={orguser.id == @current_scope.user.id}
                   class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded"
                 >
                   You
                 </span>
 
                 <span
-                  :if={user.id == @organization.admin_id}
+                  :if={orguser.id == @organization.admin_id}
                   class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded"
                 >
                   Admin
                 </span>
 
-                <%= if @is_admin? and user.id != @organization.admin_id do %>
+                <%= if @is_admin? and orguser.id != @organization.admin_id do %>
                   <.button
                     phx-click="update_admin"
-                    phx-value-user-id={user.id}
+                    phx-value-user-id={orguser.id}
                     data-confirm="Are you sure you want to make this user the new admin?"
                     class="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 px-2 py-1 rounded text-xs"
                   >
@@ -71,10 +71,10 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
                   </.button>
                 <% end %>
 
-                <%= if @is_admin? and user.id != @organization.admin_id do %>
+                <%= if @is_admin? and orguser.id != @organization.admin_id do %>
                   <.button
                     phx-click="remove_member"
-                    phx-value-user-id={user.id}
+                    phx-value-user-id={orguser.id}
                     data-confirm="Are you sure you want to remove this member?"
                     class="bg-red-100 text-red-600 hover:bg-red-200 px-2 py-1 rounded text-xs"
                   >
