@@ -1,11 +1,14 @@
 defmodule TalentsWeb.Organization.OrganizationInfo do
   use TalentsWeb, :live_view
 
+  alias Talents.Accounts
+  alias Talents.Accounts.UserNotifier
+
   @impl true
   def render(assigns) do
     ~H"""
     <div class="p-6 max-w-3xl mx-auto space-y-6">
-
+      
     <!-- Organization Header -->
       <div class="flex items-center space-x-4">
         <img
@@ -31,6 +34,22 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
         </.link>
       <% end %>
 
+      <%= if @is_admin? do %>
+        <.button
+          phx-click="open_add_member_modal"
+          class="bg-green-600 text-white px-4 py-2 ml-6 rounded hover:bg-green-700"
+        >
+          Add Member
+        </.button>
+      <% end %>
+
+      <%= if @show_add_member_modal do %>
+        <.live_component
+          module={TalentsWeb.Organization.AddMember}
+          id="add-member-modal"
+        />
+      <% end %>
+      
     <!-- Member List -->
       <div>
         <h2 class="text-xl font-semibold mt-2 mb-2">Members</h2>
@@ -108,8 +127,46 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
       socket
       |> assign(:organization, org)
       |> assign(:is_admin?, is_admin?)
+      |> assign(:show_add_member_modal, false)
 
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_info({:add_member_email_provided, email}, socket) do
+    org = socket.assigns.organization
+    org_id = org.id
+
+    case Accounts.get_user_by_email(email) do
+      nil ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "No user found with email #{email}")}
+
+      user ->
+        # Add user to org
+        Talents.add_member_to_org(user.id, org_id)
+
+        # Send email notification
+        org_url = url(~p"/users/organizations/#{org_id}")
+        {:ok, _} = UserNotifier.deliver_added_to_organization(user, org.name, org_url)
+
+        new_org = Talents.get_organization_info(org_id)
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "#{user.name} added to the organization!")
+         |> assign(:organization, new_org)
+         |> assign(:show_add_member_modal, false)}
+    end
+  end
+
+  def handle_info(:close_add_member_modal, socket) do
+    {:noreply, assign(socket, :show_add_member_modal, false)}
+  end
+
+  def handle_event("open_add_member_modal", _, socket) do
+    {:noreply, assign(socket, :show_add_member_modal, true)}
   end
 
   @impl true
@@ -169,7 +226,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
          |> push_navigate(to: ~p"/users/organizations")}
 
       {:error, reason} ->
-        {:noreply,put_flash(socket,:error, "Delete failed: #{inspect(reason)}")}
+        {:noreply, put_flash(socket, :error, "Delete failed: #{inspect(reason)}")}
     end
   end
 end

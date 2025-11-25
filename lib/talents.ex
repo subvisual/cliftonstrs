@@ -150,4 +150,13 @@ defmodule Talents do
     |> Organization.changeset(attrs)
     |> Repo.update()
   end
+
+  @doc """
+  Adds an user to the organization.
+  """
+  def add_member_to_org(user_id, org_id) do
+    %OrgUser{}
+    |> OrgUser.changeset(%{org_id: org_id, user_id: user_id})
+    |> Repo.insert!()
+  end
 end
