@@ -1,12 +1,12 @@
-defmodule Talents.OrganizationContext do
+defmodule Talents.Organizations do
   @moduledoc """
-  The OrganizationContext context.
+  The Organizations context.
   """
 
   import Ecto.Query, warn: false
   alias Talents.Repo
 
-  alias Talents.Organization.Organization
+  alias Talents.Organizations.Organization
 
   @doc """
   Returns the list of organizations.

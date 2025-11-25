@@ -1,7 +1,7 @@
-defmodule Talents.OrganizationContextFixtures do
+defmodule Talents.OrganizationsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Talents.OrganizationContext` context.
+  entities via the `Talents.Organizations` context.
   """
 
   @doc """
@@ -11,7 +11,7 @@ defmodule Talents.OrganizationContextFixtures do
     {:ok, organization} =
       attrs
       |> Enum.into(%{})
-      |> Talents.OrganizationContext.create_organization()
+      |> Talents.Organizations.create_organization()
 
     organization
   end
