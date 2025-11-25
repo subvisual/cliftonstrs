@@ -5,7 +5,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   def render(assigns) do
     ~H"""
     <div class="p-6 max-w-3xl mx-auto space-y-6">
-
+      
     <!-- Organization Header -->
       <div class="flex items-center space-x-4">
         <img
@@ -30,7 +30,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           Edit Organization
         </.link>
       <% end %>
-
+      
     <!-- Member List -->
       <div>
         <h2 class="text-xl font-semibold mt-2 mb-2">Members</h2>
@@ -86,6 +86,19 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           </ul>
         <% end %>
       </div>
+      <div class="mt-8">
+        <h2 class="text-xl font-semibold mb-4">Theme Distribution</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <%= for {{name, domain}, count} <- @distribution do %>
+            <div class="p-2 border rounded">
+              <p class="font-semibold">{name}</p>
+              <p class="text-sm text-gray-600">{domain}</p>
+              <p class="text-lg">{count}</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
       <%= if @is_admin? do %>
         <.button
           phx-click="delete_organization"
@@ -99,15 +112,32 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
     """
   end
 
+  defp theme_distribution(user_list) do
+    talent_map =
+      Talents.get_talents()
+      |> Map.new(fn t -> {{t.name, t.theme}, 0} end)
+
+    user_list
+    |> Enum.flat_map(fn u -> Talents.get_user_top_talents(u.id) end)
+    |> Enum.reduce(
+      talent_map,
+      fn t, acc -> Map.update(acc, {t.name, t.theme}, 1, fn current -> current + 1 end) end
+    )
+    |> Enum.sort_by(fn {_k, v} -> v end, :desc)
+  end
+
   @impl true
   def mount(%{"id" => id}, _session, socket) do
     org = Talents.get_organization_info(id)
     is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
+    dist = theme_distribution(org.users)
+
     socket =
       socket
       |> assign(:organization, org)
       |> assign(:is_admin?, is_admin?)
+      |> assign(:distribution, dist)
 
     {:ok, socket}
   end
@@ -169,7 +199,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
          |> push_navigate(to: ~p"/users/organizations")}
 
       {:error, reason} ->
-        {:noreply,put_flash(socket,:error, "Delete failed: #{inspect(reason)}")}
+        {:noreply, put_flash(socket, :error, "Delete failed: #{inspect(reason)}")}
     end
   end
 end
