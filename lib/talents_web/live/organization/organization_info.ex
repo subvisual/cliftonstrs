@@ -112,26 +112,12 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
     """
   end
 
-  defp theme_distribution(user_list) do
-    talent_map =
-      Talents.get_talents()
-      |> Map.new(fn t -> {{t.name, t.theme}, 0} end)
-
-    user_list
-    |> Enum.flat_map(fn u -> Talents.get_user_top_talents(u.id) end)
-    |> Enum.reduce(
-      talent_map,
-      fn t, acc -> Map.update(acc, {t.name, t.theme}, 1, fn current -> current + 1 end) end
-    )
-    |> Enum.sort_by(fn {_k, v} -> v end, :desc)
-  end
-
   @impl true
   def mount(%{"id" => id}, _session, socket) do
     org = Talents.get_organization_info(id)
     is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
-    dist = theme_distribution(org.users)
+    dist = Talents.theme_distribution(org.users)
 
     socket =
       socket
