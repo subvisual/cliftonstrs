@@ -16,7 +16,7 @@ defmodule Talents do
   Returns a list of all talents with only their id and name.
   """
   def get_talents() do
-    from(t in Talent, select: %{id: t.id, name: t.name})
+    from(t in Talent, select: %{id: t.id, name: t.name, theme: t.theme})
     |> Repo.all()
     |> Enum.sort_by(fn t -> t.name end)
   end
@@ -108,9 +108,7 @@ defmodule Talents do
     * `{0, _}` — the user was not a member (no row deleted)
   """
   def remove_member(org_id, user_id) do
-    from(ou in OrgUser,
-      where: ou.org_id == ^org_id and ou.user_id == ^user_id
-    )
+    from(ou in OrgUser, where: ou.org_id == ^org_id and ou.user_id == ^user_id)
     |> Repo.delete_all()
   end
 
@@ -149,5 +147,36 @@ defmodule Talents do
     org
     |> Organization.changeset(attrs)
     |> Repo.update()
+  end
+
+  @doc """
+  Returns the user top 10 talents.
+  """
+  def get_user_top_talents(user_id) do
+    from(ut in UserTalent,
+      join: t in Talent,
+      on: ut.talent_id == t.id,
+      where: ut.user_id == ^user_id and ut.position <= 10,
+      order_by: ut.position,
+      select: t
+    )
+    |> Repo.all()
+  end
+
+  @doc """
+  Makes the theme distribution of a given list of users.
+  """
+  def theme_distribution(user_list) do
+    talent_map =
+      Talents.get_talents()
+      |> Map.new(fn t -> {{t.name, t.theme}, 0} end)
+
+    user_list
+    |> Enum.flat_map(fn u -> Talents.get_user_top_talents(u.id) end)
+    |> Enum.reduce(
+      talent_map,
+      fn t, acc -> Map.update(acc, {t.name, t.theme}, 1, fn current -> current + 1 end) end
+    )
+    |> Enum.sort_by(fn {_k, v} -> v end, :desc)
   end
 end
