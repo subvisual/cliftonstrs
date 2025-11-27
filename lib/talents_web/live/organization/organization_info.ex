@@ -102,6 +102,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           </ul>
         <% end %>
       </div>
+      
       <.button
         :if={@is_admin?}
         phx-click="delete_organization"
@@ -110,6 +111,29 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
       >
         Delete Organization
       </.button>
+      
+      <div class="mt-8">
+        <h2 class="text-xl font-semibold mb-4">Theme Distribution</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <%= for {{name, domain}, count} <- @distribution do %>
+            <div class="p-2 border rounded">
+              <p class="font-semibold">{name}</p>
+              <p class="text-sm text-gray-600">{domain}</p>
+              <p class="text-lg">{count}</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <%= if @is_admin? do %>
+        <.button
+          phx-click="delete_organization"
+          data-confirm="Are you sure you want to delete this organization? This cannot be undone."
+          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+        >
+          Delete Organization
+        </.button>
+      <% end %>
     </div>
     """
   end
@@ -119,11 +143,14 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
     org = Talents.get_organization_info(id)
     is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
+    dist = Talents.theme_distribution(org.users)
+
     socket =
       socket
       |> assign(:organization, org)
       |> assign(:is_admin?, is_admin?)
       |> assign(:show_add_member_modal, false)
+      |> assign(:distribution, dist)
 
     {:ok, socket}
   end
