@@ -34,14 +34,13 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
         </.link>
       <% end %>
 
-      <%= if @is_admin? do %>
-        <.button
-          phx-click="open_add_member_modal"
-          class="bg-green-600 text-white px-4 py-2 ml-6 rounded hover:bg-green-700"
-        >
-          Add Member
-        </.button>
-      <% end %>
+      <.button
+        :if={@is_admin?}
+        phx-click="open_add_member_modal"
+        class="bg-green-600 text-white px-4 py-2 ml-6 rounded hover:bg-green-700"
+      >
+        Add Member
+      </.button>
 
       <%= if @show_add_member_modal do %>
         <.live_component
@@ -79,41 +78,38 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
                   Admin
                 </span>
 
-                <%= if @is_admin? and orguser.id != @organization.admin_id do %>
-                  <.button
-                    phx-click="update_admin"
-                    phx-value-user-id={orguser.id}
-                    data-confirm="Are you sure you want to make this user the new admin?"
-                    class="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 px-2 py-1 rounded text-xs"
-                  >
-                    Make Admin
-                  </.button>
-                <% end %>
+                <.button
+                  :if={@is_admin? and orguser.id != @organization.admin_id}
+                  phx-click="update_admin"
+                  phx-value-user-id={orguser.id}
+                  data-confirm="Are you sure you want to make this user the new admin?"
+                  class="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 px-2 py-1 rounded text-xs"
+                >
+                  Make Admin
+                </.button>
 
-                <%= if @is_admin? and orguser.id != @organization.admin_id do %>
-                  <.button
-                    phx-click="remove_member"
-                    phx-value-user-id={orguser.id}
-                    data-confirm="Are you sure you want to remove this member?"
-                    class="bg-red-100 text-red-600 hover:bg-red-200 px-2 py-1 rounded text-xs"
-                  >
-                    Remove
-                  </.button>
-                <% end %>
+                <.button
+                  :if={@is_admin? and orguser.id != @organization.admin_id}
+                  phx-click="remove_member"
+                  phx-value-user-id={orguser.id}
+                  data-confirm="Are you sure you want to remove this member?"
+                  class="bg-red-100 text-red-600 hover:bg-red-200 px-2 py-1 rounded text-xs"
+                >
+                  Remove
+                </.button>
               </li>
             <% end %>
           </ul>
         <% end %>
       </div>
-      <%= if @is_admin? do %>
-        <.button
-          phx-click="delete_organization"
-          data-confirm="Are you sure you want to delete this organization? This cannot be undone."
-          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-        >
-          Delete Organization
-        </.button>
-      <% end %>
+      <.button
+        :if={@is_admin?}
+        phx-click="delete_organization"
+        data-confirm="Are you sure you want to delete this organization? This cannot be undone."
+        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+      >
+        Delete Organization
+      </.button>
     </div>
     """
   end
