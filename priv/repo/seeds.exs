@@ -11,13 +11,13 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Talents.Repo
-alias Talents.Talent.Talent
-alias Talents.TalentContext
+alias Talents.Themes.Theme
+alias Talents.Themes
 
-talents = %{
+themes = %{
   1 => %{
     name: "Achiever",
-    theme: "E",
+    domain: "E",
     description:
       "People exceptionally talented in the Achiever theme work hard and possess a great deal of stamina. They take immense satisfaction in being busy and productive.",
     i_am: "a hard worker",
@@ -33,7 +33,7 @@ talents = %{
   },
   2 => %{
     name: "Activator",
-    theme: "I",
+    domain: "I",
     description:
       "People exceptionally talented in the Activator theme can make things happen by turning thoughts into action. They want to do things now, rather than simply talk about them.",
     i_am: "impatient with inactivity",
@@ -51,7 +51,7 @@ talents = %{
   },
   3 => %{
     name: "Adaptability",
-    theme: "R",
+    domain: "R",
     description:
       "People exceptionally talented in the Adaptability theme prefer to go with the flow. They tend to be “now” people who take things as they come and discover the future one day at a time.",
     i_am: "a here-and-now person",
@@ -69,7 +69,7 @@ talents = %{
   },
   4 => %{
     name: "Analytical",
-    theme: "T",
+    domain: "T",
     description:
       "People exceptionally talented in the Analytical theme search for reasons and causes. They have the ability to think about all of the factors that might affect a situation.",
     i_am: "logical and objective in approach",
@@ -86,7 +86,7 @@ talents = %{
   },
   5 => %{
     name: "Arranger",
-    theme: "E",
+    domain: "E",
     description:
       "People exceptionally talented in the Arranger theme can organize, but they also have a flexibility that complements this ability. They like to determine how all of the pieces and resources can be arranged for maximum productivity.",
     i_am: "comfortable with lots of moving parts",
@@ -103,7 +103,7 @@ talents = %{
   },
   6 => %{
     name: "Belief",
-    theme: "E",
+    domain: "E",
     description:
       "People exceptionally talented in the Belief theme have certain core values that are unchanging. Out of these values emerges a defined purpose for their lives.",
     i_am: "passionate, uncompromising about core values",
@@ -121,7 +121,7 @@ talents = %{
   },
   7 => %{
     name: "Command",
-    theme: "I",
+    domain: "I",
     description:
       "People exceptionally talented in the Command theme have presence. They can take control of a situation and make decisions.",
     i_am: "direct and decisive",
@@ -139,7 +139,7 @@ talents = %{
   },
   8 => %{
     name: "Communication",
-    theme: "I",
+    domain: "I",
     description:
       "People exceptionally talented in the Communication theme generally find it easy to put their thoughts into words. They are good conversationalists and presenters.",
     i_am: "verbally expressive",
@@ -157,7 +157,7 @@ talents = %{
   },
   9 => %{
     name: "Competition",
-    theme: "I",
+    domain: "I",
     description:
       "People exceptionally talented in the Competition theme measure their progress against the performance of others. They strive to win first place and revel in contests.",
     i_am: "aware of my competitors",
@@ -175,7 +175,7 @@ talents = %{
   },
   10 => %{
     name: "Connectedness",
-    theme: "R",
+    domain: "R",
     description:
       "People exceptionally talented in the Connectedness theme have faith in the links among all things. They believe there are few coincidences and that almost every event has meaning.",
     i_am: "incredibly aware of the borderless and timeless human family",
@@ -193,7 +193,7 @@ talents = %{
   },
   11 => %{
     name: "Consistency",
-    theme: "E",
+    domain: "E",
     description:
       "People exceptionally talented in the Consistency theme are keenly aware of the need to treat people the same. They crave stable routines and clear rules and procedures that everyone can follow.",
     i_am: "more interested in group needs than individual wants",
@@ -211,7 +211,7 @@ talents = %{
   },
   12 => %{
     name: "Context",
-    theme: "T",
+    domain: "T",
     description:
       "People exceptionally talented in the Context theme enjoy thinking about the past. They understand the present by researching its history.",
     i_am: "appreciative of my predecessors and prior events",
@@ -229,7 +229,7 @@ talents = %{
   },
   13 => %{
     name: "Deliberative",
-    theme: "E",
+    domain: "E",
     description:
       "People exceptionally talented in the Deliberative theme are best described by the serious care they take in making decisions or choices. They anticipate obstacles.",
     i_am: "a vigilant observer of potential risk",
@@ -247,7 +247,7 @@ talents = %{
   },
   14 => %{
     name: "Developer",
-    theme: "R",
+    domain: "R",
     description:
       "People exceptionally talented in the Developer theme recognize and cultivate the potential in others. They spot the signs of each small improvement and derive satisfaction from evidence of progress.",
     i_am: "patient with the inexperienced and unseasoned",
@@ -265,7 +265,7 @@ talents = %{
   },
   15 => %{
     name: "Discipline",
-    theme: "E",
+    domain: "E",
     description:
       "People exceptionally talented in the Discipline theme enjoy routine and structure. Their world is best described by the order they create.",
     i_am: "an efficient manager of limited resources",
@@ -283,7 +283,7 @@ talents = %{
   },
   16 => %{
     name: "Empathy",
-    theme: "R",
+    domain: "R",
     description:
       "People exceptionally talented in the Empathy theme can sense other people’s feelings by imagining themselves in others’ lives or situations.",
     i_am: "an emotional person",
@@ -301,7 +301,7 @@ talents = %{
   },
   17 => %{
     name: "Focus",
-    theme: "E",
+    domain: "E",
     description:
       "People exceptionally talented in the Focus theme can take a direction, follow through and make the corrections necessary to stay on track. They prioritize, then act.",
     i_am: "intensely and intentionally single-minded",
@@ -318,7 +318,7 @@ talents = %{
   },
   18 => %{
     name: "Futuristic",
-    theme: "T",
+    domain: "T",
     description:
       "People exceptionally talented in the Futuristic theme are inspired by the future and what could be. They energize others with their visions of the future.",
     i_am: "fascinated with tomorrow",
@@ -336,7 +336,7 @@ talents = %{
   },
   19 => %{
     name: "Harmony",
-    theme: "R",
+    domain: "R",
     description:
       "People exceptionally talented in the Harmony theme look for consensus. They don’t enjoy conflict; rather, they seek areas of agreement.",
     i_am: "calm, even-keeled",
@@ -354,7 +354,7 @@ talents = %{
   },
   20 => %{
     name: "Ideation",
-    theme: "T",
+    domain: "T",
     description:
       "People exceptionally talented in the Ideation theme are fascinated by ideas. They are able to find connections between seemingly disparate phenomena.",
     i_am: "unaffected by the ambiguity and risk of innovation",
@@ -372,7 +372,7 @@ talents = %{
   },
   21 => %{
     name: "Includer",
-    theme: "R",
+    domain: "R",
     description:
       "People exceptionally talented in the Includer theme accept others. They show awareness of those who feel left out and make an effort to include them.",
     i_am: "aware of exclusion and understand its repercussions",
@@ -390,7 +390,7 @@ talents = %{
   },
   22 => %{
     name: "Individualization",
-    theme: "R",
+    domain: "R",
     description:
       "People exceptionally talented in the Individualization theme are intrigued with the unique qualities of each person. They have a gift for figuring out how different people can work together productively.",
     i_am: "a customizer",
@@ -408,7 +408,7 @@ talents = %{
   },
   23 => %{
     name: "Input",
-    theme: "T",
+    domain: "T",
     description:
       "People exceptionally talented in the Input theme have a need to collect and archive. They may accumulate information, ideas, artifacts or even relationships.",
     i_am: "utilitarian resource collector",
@@ -426,7 +426,7 @@ talents = %{
   },
   24 => %{
     name: "Intellection",
-    theme: "T",
+    domain: "T",
     description:
       "People exceptionally talented in the Intellection theme are characterized by their intellectual activity. They are introspective and appreciate intellectual discussions.",
     i_am: "conceptual, deep, solitary",
@@ -444,7 +444,7 @@ talents = %{
   },
   25 => %{
     name: "Learner",
-    theme: "T",
+    domain: "T",
     description:
       "People exceptionally talented in the Learner theme have a great desire to learn and want to continuously improve. The process of learning, rather than the outcome, excites them.",
     i_am: "one who enjoys the experience of being a learner",
@@ -462,7 +462,7 @@ talents = %{
   },
   26 => %{
     name: "Maximizer",
-    theme: "I",
+    domain: "I",
     description:
       "People exceptionally talented in the Maximizer theme focus on strengths as a way to stimulate personal and group excellence. They seek to transform something strong into something superb.",
     i_am: "committed to excellence",
@@ -480,7 +480,7 @@ talents = %{
   },
   27 => %{
     name: "Positivity",
-    theme: "R",
+    domain: "R",
     description:
       "People exceptionally talented in the Positivity theme have contagious enthusiasm. They are upbeat and can get others excited about what they are going to do.",
     i_am: "optimistic, hopeful, fun-loving",
@@ -497,7 +497,7 @@ talents = %{
   },
   28 => %{
     name: "Relator",
-    theme: "R",
+    domain: "R",
     description:
       "People exceptionally talented in the Relator theme enjoy close relationships with others. They find deep satisfaction in working hard with friends to achieve a goal.",
     i_am: "genuine and authentic",
@@ -515,7 +515,7 @@ talents = %{
   },
   29 => %{
     name: "Responsibility",
-    theme: "E",
+    domain: "E",
     description:
       "People exceptionally talented in the Responsibility theme take psychological ownership of what they say they will do. They are committed to stable values such as honesty and loyalty.",
     i_am: "someone others often trust to get things done",
@@ -533,7 +533,7 @@ talents = %{
   },
   30 => %{
     name: "Restorative",
-    theme: "E",
+    domain: "E",
     description:
       "People exceptionally talented in the Restorative theme are adept at dealing with problems. They are good at figuring out what is wrong and resolving it.",
     i_am: "not intimidated by points of pain or dysfunction",
@@ -550,7 +550,7 @@ talents = %{
   },
   31 => %{
     name: "Self-Assurance",
-    theme: "I",
+    domain: "I",
     description:
       "People exceptionally talented in the Self-Assurance theme feel confident in their ability to take risks and manage their own lives. They have an inner compass that gives them certainty in their decisions.",
     i_am: "internally confident in the midst of external uncertainty",
@@ -567,7 +567,7 @@ talents = %{
   },
   32 => %{
     name: "Significance",
-    theme: "I",
+    domain: "I",
     description:
       "People exceptionally talented in the Significance theme want to make a big impact. They are independent and prioritize projects based on how much influence they will have on their organization or people around them.",
     i_am:
@@ -587,7 +587,7 @@ talents = %{
   },
   33 => %{
     name: "Strategic",
-    theme: "T",
+    domain: "T",
     description:
       "People exceptionally talented in the Strategic theme create alternative ways to proceed. Faced with any given scenario, they can quickly spot the relevant patterns and issues.",
     i_am: "willing to consider all the possibilities so the best isn’t missed",
@@ -605,7 +605,7 @@ talents = %{
   },
   34 => %{
     name: "Woo",
-    theme: "I",
+    domain: "I",
     description:
       "People exceptionally talented in the Woo theme love the challenge of meeting new people and winning them over. They derive satisfaction from breaking the ice and making a connection with someone.",
     i_am: "socially fast and outgoing",
@@ -622,21 +622,21 @@ talents = %{
   }
 }
 
-talent_records =
-  Enum.map(talents, fn {_, attrs} ->
+theme_records =
+  Enum.map(themes, fn {_, attrs} ->
     contrasts = Map.take(attrs, [:text_contrast_one, :text_contrast_two])
     attrs = Map.drop(attrs, [:text_contrast_one, :text_contrast_two])
 
-    {:ok,talent} = TalentContext.create_talent(attrs)
+    {:ok,theme} = Themes.create_theme(attrs)
 
-    {talent, contrasts}
+    {theme, contrasts}
   end)
 
-Enum.each(talent_records, fn {talent, contrasts} ->
+Enum.each(theme_records, fn {theme, contrasts} ->
   Enum.each(contrasts, fn
     {_, phrase} ->
-      # Format: "TalentName: ... / ContrastName: ..."
-      [_talent_phrase, contrast_phrase] = String.split(phrase, "/")
+      # Format: "ThemeName: ... / ContrastName: ..."
+      [_theme_phrase, contrast_phrase] = String.split(phrase, "/")
 
       contrast_name =
         contrast_phrase
@@ -644,10 +644,10 @@ Enum.each(talent_records, fn {talent, contrasts} ->
         |> String.split(":")
         |> hd()
 
-      contrast_talent = Repo.get_by!(Talent, name: contrast_name)
+      contrast_talent = Repo.get_by!(Theme, name: contrast_name)
 
-      TalentContext.create_contrast(%{
-        talent_id: talent.id,
+      Themes.create_contrast(%{
+        theme_id: theme.id,
         contrast_id: contrast_talent.id,
         phrase: phrase
       })

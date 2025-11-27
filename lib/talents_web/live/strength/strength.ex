@@ -1,8 +1,8 @@
 defmodule TalentsWeb.Strength.StrengthLive do
-  alias Talents.TalentContext
+  alias Talents.Themes
   use TalentsWeb, :live_view
 
-  @talent_ranks 34
+  @themes_ranks 34
 
   def render(assigns) do
     ~H"""
@@ -18,8 +18,8 @@ defmodule TalentsWeb.Strength.StrengthLive do
               module={TalentsWeb.Strength.RankSelectComponent}
               id={"rank_select_#{rank}"}
               rank={rank}
-              talents={@talents}
-              selected_talents={@selected_talents}
+              themes={@themes}
+              selected_themes={@selected_themes}
             />
           <% end %>
         </div>
@@ -30,13 +30,13 @@ defmodule TalentsWeb.Strength.StrengthLive do
               module={TalentsWeb.Strength.RankSelectComponent}
               id={"rank_select_#{rank}"}
               rank={rank}
-              talents={@talents}
-              selected_talents={@selected_talents}
+              themes={@themes}
+              selected_themes={@selected_themes}
             />
           <% end %>
         </div>
       </div>
-      
+
     <!-- Grid below: ranks 11 to 34 -->
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <%= for rank <- Enum.slice(@ranks, 10, 24) do %>
@@ -44,8 +44,8 @@ defmodule TalentsWeb.Strength.StrengthLive do
             module={TalentsWeb.Strength.RankSelectComponent}
             id={"rank_select_#{rank}"}
             rank={rank}
-            talents={@talents}
-            selected_talents={@selected_talents}
+            themes={@themes}
+            selected_themes={@selected_themes}
           />
         <% end %>
       </div>
@@ -54,7 +54,7 @@ defmodule TalentsWeb.Strength.StrengthLive do
         <button
           type="submit"
           class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-          disabled={Enum.count(@selected_talents) < 34}
+          disabled={Enum.count(@selected_themes) < 34}
         >
           Save
         </button>
@@ -65,37 +65,37 @@ defmodule TalentsWeb.Strength.StrengthLive do
 
   def mount(_params, _session, socket) do
     user_id = socket.assigns.current_scope.user.id
-    talents = TalentContext.list_talents()
-    previous_select = TalentContext.get_user_positions(user_id)
+    themes = Themes.list_themes()
+    previous_select = Themes.get_user_positions(user_id)
 
     socket =
       socket
-      |> assign(:talents, talents)
-      |> assign(:selected_talents, previous_select)
-      |> assign(:ranks, Enum.map(1..@talent_ranks, &Integer.to_string/1))
+      |> assign(:themes, themes)
+      |> assign(:selected_themes, previous_select)
+      |> assign(:ranks, Enum.map(1..@themes_ranks, &Integer.to_string/1))
 
     {:ok, socket}
   end
 
-  def handle_event("select_talent", %{"_target" => [changed_key]} = params, socket) do
-    # changed_key == "talent_N"
+  def handle_event("select_theme", %{"_target" => [changed_key]} = params, socket) do
+    # changed_key == "theme_N"
     rank = String.slice(changed_key, 7..-1//1)
-    talent = Map.get(params, changed_key, "")
+    theme = Map.get(params, changed_key, "")
 
     selected =
-      case talent do
-        "" -> Map.delete(socket.assigns.selected_talents, rank)
-        _ -> Map.put(socket.assigns.selected_talents, rank, talent)
+      case theme do
+        "" -> Map.delete(socket.assigns.selected_themes, rank)
+        _ -> Map.put(socket.assigns.selected_themes, rank, theme)
       end
 
-    {:noreply, assign(socket, :selected_talents, selected)}
+    {:noreply, assign(socket, :selected_themes, selected)}
   end
 
   def handle_event("save", _params, socket) do
     user_id = socket.assigns.current_scope.user.id
-    selected = socket.assigns.selected_talents
+    selected = socket.assigns.selected_themes
 
-    TalentContext.save_user_talents(user_id, selected)
+    Themes.save_user_themes(user_id, selected)
 
     {:noreply,
      socket
