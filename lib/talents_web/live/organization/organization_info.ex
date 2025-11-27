@@ -102,7 +102,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           </ul>
         <% end %>
       </div>
-      
+
       <.button
         :if={@is_admin?}
         phx-click="delete_organization"
@@ -111,7 +111,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
       >
         Delete Organization
       </.button>
-      
+
       <div class="mt-8">
         <h2 class="text-xl font-semibold mb-4">Theme Distribution</h2>
 

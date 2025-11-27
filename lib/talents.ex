@@ -156,7 +156,8 @@ defmodule Talents do
     %OrgUser{}
     |> OrgUser.changeset(%{org_id: org_id, user_id: user_id})
     |> Repo.insert!()
-  
+  end
+
   @doc """
   Returns the user top 10 talents.
   """
