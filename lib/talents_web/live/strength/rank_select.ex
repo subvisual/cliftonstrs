@@ -3,29 +3,29 @@ defmodule TalentsWeb.Strength.RankSelectComponent do
 
   attr :id, :string, required: true
   attr :rank, :string, required: true
-  attr :talents, :list, required: true
-  attr :selected_talents, :map, required: true
+  attr :themes, :list, required: true
+  attr :selected_themes, :map, required: true
 
   def render(assigns) do
     ~H"""
     <div class="flex items-center mb-3">
       <span class="font-bold w-8">{@rank}.</span>
       <select
-        name={"talent_#{@rank}"}
-        phx-change="select_talent"
+        name={"theme_#{@rank}"}
+        phx-change="select_theme"
         class="border rounded p-2 flex-1 bg-white text-gray-900 dark:text-gray-100"
       >
-        <option value="">Select talent</option>
-        <%= for talent <- @talents do %>
+        <option value="">Select theme</option>
+        <%= for theme <- @themes do %>
           <option
-            value={talent.id}
-            selected={@selected_talents[@rank] == Integer.to_string(talent.id)}
+            value={theme.id}
+            selected={@selected_themes[@rank] == Integer.to_string(theme.id)}
             disabled={
-              Integer.to_string(talent.id) in Map.values(@selected_talents) &&
-                @selected_talents[@rank] != Integer.to_string(talent.id)
+              Integer.to_string(theme.id) in Map.values(@selected_themes) &&
+                @selected_themes[@rank] != Integer.to_string(theme.id)
             }
           >
-            {talent.name}
+            {theme.name}
           </option>
         <% end %>
       </select>
