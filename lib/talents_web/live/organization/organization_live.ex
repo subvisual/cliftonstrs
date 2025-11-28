@@ -1,0 +1,48 @@
+defmodule TalentsWeb.Organization.OrganizationLive do
+  use TalentsWeb, :live_view
+
+  alias Talents.Organizations
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <div class="p-6">
+      <h1 class="text-2xl font-bold mb-4">Your Organizations</h1>
+
+      <%= if @organizations == [] do %>
+        <p class="text-gray-600">You are not part of any organizations.</p>
+      <% else %>
+        <ul class="space-y-3">
+          <%= for org <- @organizations do %>
+            <li class="p-3 border rounded">
+              <.link navigate={~p"/users/organizations/#{org.id}"}>
+                <div class="font-semibold">{org.name}</div>
+                <div class="text-sm text-gray-600">
+                  Admin: {org.admin.name}
+                </div>
+              </.link>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <div class="mt-6">
+        <.link
+          patch={~p"/users/organizations/create"}
+          class="px-3 py-2 bg-blue-600 mt-6 text-white rounded"
+        >
+          + Create Organization
+        </.link>
+      </div>
+    </div>
+    """
+  end
+
+  @impl true
+  def mount(_params, _session, socket) do
+    user_id = socket.assigns.current_scope.user.id
+    orgs = Organizations.list_user_organizations(user_id)
+
+    {:ok, assign(socket, :organizations, orgs)}
+  end
+end
