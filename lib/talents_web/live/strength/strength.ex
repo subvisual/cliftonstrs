@@ -7,6 +7,11 @@ defmodule TalentsWeb.Strength.StrengthLive do
     ~H"""
     <h1 class="text-2xl font-bold mb-6">CliftonStrengths Ranking</h1>
 
+    <.live_component
+      module={TalentsWeb.Strength.RankImportComponent}
+      id="rankings-upload"
+    />
+
     <!-- The key fix: phx-change moved to the form -->
     <form phx-submit="save" class="space-y-8">
       <!-- Two columns: ranks 1 to 5 (left), 6 to 10 (right) -->
@@ -100,5 +105,18 @@ defmodule TalentsWeb.Strength.StrengthLive do
      socket
      |> put_flash(:info, "Strengths saved successfully!")
      |> push_navigate(to: ~p"/")}
+  end
+
+  def handle_info({:rankings_imported, rankings}, socket) do
+    # %{position_from_pdf => talent_id}
+    imported =
+      Map.new(
+        socket.assigns.talents,
+        fn t ->
+          {Map.get(rankings, t.name, ""), Integer.to_string(t.id)}
+        end
+      )
+
+    {:noreply, assign(socket, :selected_talents, imported)}
   end
 end
