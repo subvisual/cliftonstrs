@@ -109,15 +109,15 @@ defmodule TalentsWeb.Strength.StrengthLive do
   end
 
   def handle_info({:rankings_imported, rankings}, socket) do
-    # %{position_from_pdf => talent_id}
+    # %{position_from_pdf => theme_id}
     imported =
       Map.new(
-        socket.assigns.talents,
+        socket.assigns.themes,
         fn t ->
           {Map.get(rankings, t.name, ""), Integer.to_string(t.id)}
         end
       )
 
-    {:noreply, assign(socket, :selected_talents, imported)}
+    {:noreply, assign(socket, :selected_themes, imported)}
   end
 end
