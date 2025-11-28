@@ -8,6 +8,7 @@ defmodule Talents.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      PdfExtractor,
       TalentsWeb.Telemetry,
       Talents.Repo,
       {DNSCluster, query: Application.get_env(:talents, :dns_cluster_query) || :ignore},
