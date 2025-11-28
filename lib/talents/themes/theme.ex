@@ -1,11 +1,11 @@
-defmodule Talents.Talent do
+defmodule Talents.Themes.Theme do
   use Ecto.Schema
   import Ecto.Changeset
 
   @attr [
     :name,
     :description,
-    :theme,
+    :domain,
     :i_am,
     :i_will,
     :i_love,
@@ -13,15 +13,13 @@ defmodule Talents.Talent do
     :i_bring,
     :i_need,
     :metaphor_image,
-    :barrier_label,
-    :text_contrast_one,
-    :text_contrast_two
+    :barrier_label
   ]
 
-  schema "talents" do
+  schema "themes" do
     field :name, :string
     field :description, :string
-    field :theme, :string
+    field :domain, :string
     field :i_am, :string
     field :i_will, :string
     field :i_love, :string
@@ -30,16 +28,17 @@ defmodule Talents.Talent do
     field :i_need, :string
     field :metaphor_image, :string
     field :barrier_label, :string
-    field :text_contrast_one, :string
-    field :text_contrast_two, :string
+
+    has_many :contrasts, Talents.Themes.Contrast, foreign_key: :theme_id
+    has_many :contrasted_with, Talents.Themes.Contrast, foreign_key: :contrast_id
 
     timestamps(type: :utc_datetime)
   end
 
   @doc false
-  def changeset(talent, attrs) do
-    talent
+  def changeset(theme, attrs) do
+    theme
     |> cast(attrs, @attr)
-    |> validate_required([:name, :description, :theme])
+    |> validate_required(@attr)
   end
 end

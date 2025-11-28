@@ -11,10 +11,10 @@ defmodule Talents.Accounts.User do
     field :name, :string
     field :avatar, :string
 
-    has_many :organizations, Talents.Organization, foreign_key: :admin_id
-    many_to_many :talents, Talents.Talent, join_through: "user_talents"
+    has_many :organizations, Talents.Organizations.Organization, foreign_key: :admin_id
+    many_to_many :themes, Talents.Themes.Theme, join_through: "user_themes"
 
-    many_to_many :member_organizations, Talents.Organization,
+    many_to_many :member_organizations, Talents.Organizations.Organization,
       join_through: "org_users",
       join_keys: [user_id: :id, org_id: :id]
 

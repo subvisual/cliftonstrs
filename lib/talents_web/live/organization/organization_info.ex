@@ -3,12 +3,14 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
 
   alias Talents.Accounts
   alias Talents.Accounts.UserNotifier
+  alias Talents.Organizations
+  alias Talents.Themes
 
   @impl true
   def render(assigns) do
     ~H"""
     <div class="p-6 max-w-3xl mx-auto space-y-6">
-      
+
     <!-- Organization Header -->
       <div class="flex items-center space-x-4">
         <img
@@ -48,7 +50,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           id="add-member-modal"
         />
       <% end %>
-      
+
     <!-- Member List -->
       <div>
         <h2 class="text-xl font-semibold mt-2 mb-2">Members</h2>
@@ -140,10 +142,10 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
-    org = Talents.get_organization_info(id)
+    org = Organizations.get_organization_info(id)
     is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
-    dist = Talents.theme_distribution(org.users)
+    dist = Themes.theme_distribution(org.users)
 
     socket =
       socket
@@ -168,13 +170,13 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
 
       user ->
         # Add user to org
-        Talents.add_member_to_org(user.id, org_id)
+        Organizations.add_member_to_org(user.id, org_id)
 
         # Send email notification
         org_url = url(~p"/users/organizations/#{org_id}")
         {:ok, _} = UserNotifier.deliver_added_to_organization(user, org.name, org_url)
 
-        new_org = Talents.get_organization_info(org_id)
+        new_org = Organizations.get_organization_info(org_id)
 
         {:noreply,
          socket
@@ -197,9 +199,9 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
     org_id = socket.assigns.organization.id
     user_id = String.to_integer(user_id)
 
-    case Talents.remove_member(org_id, user_id) do
+    case Organizations.remove_member(org_id, user_id) do
       {1, _} ->
-        org = Talents.get_organization_info(org_id)
+        org = Organizations.get_organization_info(org_id)
         is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
         {:noreply,
@@ -220,9 +222,9 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
     org_id = socket.assigns.organization.id
     new_admin_id = String.to_integer(user_id)
 
-    case Talents.update_admin(org_id, new_admin_id) do
+    case Organizations.update_admin(org_id, new_admin_id) do
       {1, _} ->
-        org = Talents.get_organization_info(org_id)
+        org = Organizations.get_organization_info(org_id)
         is_admin? = org.admin_id == socket.assigns.current_scope.user.id
 
         {:noreply,
@@ -242,7 +244,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   def handle_event("delete_organization", _params, socket) do
     org = socket.assigns.organization
 
-    case Talents.delete_organization(org) do
+    case Organizations.delete_organization(org) do
       {:ok, _} ->
         {:noreply,
          socket

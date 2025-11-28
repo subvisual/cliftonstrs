@@ -1,6 +1,8 @@
 defmodule TalentsWeb.Organization.OrganizationLive do
   use TalentsWeb, :live_view
 
+  alias Talents.Organizations
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -39,7 +41,7 @@ defmodule TalentsWeb.Organization.OrganizationLive do
   @impl true
   def mount(_params, _session, socket) do
     user_id = socket.assigns.current_scope.user.id
-    orgs = Talents.get_user_organizations(user_id)
+    orgs = Organizations.list_user_organizations(user_id)
 
     {:ok, assign(socket, :organizations, orgs)}
   end

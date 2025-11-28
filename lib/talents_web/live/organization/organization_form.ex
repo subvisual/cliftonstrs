@@ -1,7 +1,9 @@
 defmodule TalentsWeb.Organization.OrganizationForm do
+alias Hex.API.Key.Organization
   use TalentsWeb, :live_view
 
-  alias Talents.{Organization, Repo, OrgUser}
+  alias Talents.Organizations
+  alias Talents.Organizations.Organization
 
   @impl true
   def render(assigns) do
@@ -28,7 +30,7 @@ defmodule TalentsWeb.Organization.OrganizationForm do
   def mount(params, _session, socket) do
     case socket.assigns.live_action do
       :new ->
-        changeset = Organization.changeset(%Organization{}, %{})
+        changeset = Organizations.change_organization(%Organization{})
 
         {:ok,
          socket
@@ -37,7 +39,7 @@ defmodule TalentsWeb.Organization.OrganizationForm do
 
       :edit ->
         id = params["id"]
-        org = Talents.get_organization_info(id)
+        org = Organizations.get_organization_info(id)
 
         changeset = Organization.changeset(org, %{})
 
@@ -70,11 +72,9 @@ defmodule TalentsWeb.Organization.OrganizationForm do
     user_id = socket.assigns.current_scope.user.id
     params = Map.put(params, "admin_id", user_id)
 
-    case Talents.create_organization(params) do
+    case Organizations.create_organization(params) do
       {:ok, org} ->
-        %OrgUser{org_id: org.id, user_id: user_id}
-        |> OrgUser.changeset(%{})
-        |> Repo.insert()
+        Organizations.add_member_to_org(user_id,org.id)
 
         {:noreply,
          socket
@@ -89,7 +89,7 @@ defmodule TalentsWeb.Organization.OrganizationForm do
   defp update_org(socket, params) do
     org = socket.assigns.organization
 
-    case Talents.update_organization(org, params) do
+    case Organizations.update_organization(org, params) do
       {:ok, updated} ->
         {:noreply,
          socket
