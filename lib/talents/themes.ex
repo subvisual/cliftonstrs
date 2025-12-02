@@ -18,7 +18,7 @@ defmodule Talents.Themes do
 
   """
   def list_themes do
-    from(t in Theme, select: %{id: t.id, name: t.name})
+    from(t in Theme, select: %{id: t.id, name: t.name, domain: t.domain})
     |> Repo.all()
     |> Enum.sort_by(fn t -> t.name end)
   end
@@ -136,5 +136,36 @@ defmodule Talents.Themes do
     %Contrast{}
     |> Contrast.changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Returns the user top 10 talents.
+  """
+  def get_user_top_themes(user_id) do
+    from(ut in UserTheme,
+      join: t in Theme,
+      on: ut.theme_id == t.id,
+      where: ut.user_id == ^user_id and ut.position <= 10,
+      order_by: ut.position,
+      select: t
+    )
+    |> Repo.all()
+  end
+
+    @doc """
+  Makes the theme distribution of a given list of users.
+  """
+  def theme_distribution(user_list) do
+    theme_map =
+      list_themes()
+      |> Map.new(fn t -> {{t.name, t.domain}, 0} end)
+
+    user_list
+    |> Enum.flat_map(fn u -> get_user_top_themes(u.id) end)
+    |> Enum.reduce(
+      theme_map,
+      fn t, acc -> Map.update(acc, {t.name, t.theme}, 1, fn current -> current + 1 end) end
+    )
+    |> Enum.sort_by(fn {_k, v} -> v end, :desc)
   end
 end
