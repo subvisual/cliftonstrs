@@ -1,5 +1,5 @@
 defmodule TalentsWeb.Organization.OrganizationForm do
-alias Hex.API.Key.Organization
+  alias Hex.API.Key.Organization
   use TalentsWeb, :live_view
 
   alias Talents.Organizations
@@ -74,7 +74,7 @@ alias Hex.API.Key.Organization
 
     case Organizations.create_organization(params) do
       {:ok, org} ->
-        Organizations.add_member_to_org(user_id,org.id)
+        Organizations.add_member_to_org(user_id, org.id)
 
         {:noreply,
          socket

@@ -16,8 +16,8 @@ defmodule TalentsWeb.UserLive.UserProfile do
         />
 
         <div>
-          <h1 class="text-3xl font-bold"><%= @user.name%></h1>
-          <p class="text-gray-600"><%= @user.email%></p>
+          <h1 class="text-3xl font-bold">{@user.name}</h1>
+          <p class="text-gray-600">{@user.email}</p>
         </div>
       </div>
 

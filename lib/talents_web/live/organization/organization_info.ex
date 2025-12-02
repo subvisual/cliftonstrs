@@ -10,7 +10,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
   def render(assigns) do
     ~H"""
     <div class="p-6 max-w-3xl mx-auto space-y-6">
-
+      
     <!-- Organization Header -->
       <div class="flex items-center space-x-4">
         <img
@@ -50,7 +50,7 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           id="add-member-modal"
         />
       <% end %>
-
+      
     <!-- Member List -->
       <div>
         <h2 class="text-xl font-semibold mt-2 mb-2">Members</h2>
