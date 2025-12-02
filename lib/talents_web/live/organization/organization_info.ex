@@ -62,7 +62,11 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
             <%= for orguser <- @organization.users do %>
               <li class="p-3 border rounded flex items-center space-x-3">
                 <div class="flex-1">
-                  <p class="font-semibold">{orguser.name}</p>
+                  <p class="font-semibold">
+                    <.link href={~p"/users/profile/#{orguser.id}"}>
+                      {orguser.name}
+                    </.link>
+                  </p>
                   <p class="text-gray-600 text-sm">{orguser.email}</p>
                 </div>
 
