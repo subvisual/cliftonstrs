@@ -12,8 +12,11 @@ defmodule Talents.Accounts.User do
     field :avatar, :string
 
     has_many :organizations, Talents.Organizations.Organization, foreign_key: :admin_id
-    many_to_many :member_organizations, Talents.Organizations.Organization, join_through: "org_users"
-    many_to_many :talents, Talents.Talent.Talent, join_through: "user_talents"
+    many_to_many :themes, Talents.Themes.Theme, join_through: "user_themes"
+
+    many_to_many :member_organizations, Talents.Organizations.Organization,
+      join_through: "org_users",
+      join_keys: [user_id: :id, org_id: :id]
 
     timestamps(type: :utc_datetime)
   end

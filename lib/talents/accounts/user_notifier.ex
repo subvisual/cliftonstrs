@@ -56,4 +56,22 @@ defmodule Talents.Accounts.UserNotifier do
     ==============================
     """)
   end
+
+  @doc """
+  Deliver an added to the organization message to the user email.
+  """
+  def deliver_added_to_organization(user, org_name, url) do
+    deliver(user.email, "Joined #{org_name}", """
+
+    ==============================
+
+    Hi #{user.name},
+
+    You've been added to #{org_name}! You can check it here:
+
+    #{url}
+
+    ==============================
+    """)
+  end
 end
