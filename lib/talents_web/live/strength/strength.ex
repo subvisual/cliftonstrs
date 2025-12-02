@@ -83,8 +83,8 @@ defmodule TalentsWeb.Strength.StrengthLive do
   end
 
   def handle_event("select_theme", %{"_target" => [changed_key]} = params, socket) do
-    # changed_key == "theme_N"
-    rank = String.slice(changed_key, 7..-1//1)
+    # changed_key == "theme_N". Slice before "_"
+    rank = String.slice(changed_key, 6..-1//1)
     theme = Map.get(params, changed_key, "")
 
     selected =
