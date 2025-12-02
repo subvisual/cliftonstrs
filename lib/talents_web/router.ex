@@ -56,6 +56,10 @@ defmodule TalentsWeb.Router do
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
       live "/users/profile/:id", UserLive.UserProfile, :index
       live "/users/strengths", Strength.StrengthLive, :index
+      live "/users/organizations", Organization.OrganizationLive, :index
+      live "/users/organizations/create", Organization.OrganizationForm, :new
+      live "/users/organizations/:id", Organization.OrganizationInfo, :show
+      live "/users/organizations/:id/edit", Organization.OrganizationForm, :edit
     end
 
     post "/users/update-password", UserSessionController, :update_password
