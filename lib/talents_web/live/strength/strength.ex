@@ -41,7 +41,7 @@ defmodule TalentsWeb.Strength.StrengthLive do
           <% end %>
         </div>
       </div>
-
+      
     <!-- Grid below: ranks 11 to 34 -->
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <%= for rank <- Enum.slice(@ranks, 10, 24) do %>

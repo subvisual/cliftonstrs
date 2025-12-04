@@ -90,7 +90,7 @@ defmodule Talents.Themes do
   Returns a data structure for tracking theme changes.
   """
   def change_theme(%Theme{} = theme, attrs \\ %{}) do
-    Theme.changeset(theme,attrs)
+    Theme.changeset(theme, attrs)
   end
 
   @doc """
@@ -152,7 +152,7 @@ defmodule Talents.Themes do
     |> Repo.all()
   end
 
-    @doc """
+  @doc """
   Makes the theme distribution of a given list of users.
   """
   def theme_distribution(user_list) do
@@ -164,7 +164,7 @@ defmodule Talents.Themes do
     |> Enum.flat_map(fn u -> get_user_top_themes(u.id) end)
     |> Enum.reduce(
       theme_map,
-      fn t, acc -> Map.update(acc, {t.name, t.theme}, 1, fn current -> current + 1 end) end
+      fn t, acc -> Map.update(acc, {t.name, t.domain}, 1, fn current -> current + 1 end) end
     )
     |> Enum.sort_by(fn {_k, v} -> v end, :desc)
   end

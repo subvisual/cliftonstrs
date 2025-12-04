@@ -25,7 +25,7 @@ defmodule TalentsWeb.Strength.RankImportComponent do
   @impl true
   def handle_event("parse", %{"pdf_path" => path}, socket) do
     # Page 19, the section with the ranks
-    areas = %{18 => {0, 150, 180, 750}}
+    areas = %{18 => {0, 150, 200, 760}}
 
     case PdfExtractor.extract_text(path, areas) do
       {:ok, page} ->

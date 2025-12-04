@@ -627,7 +627,7 @@ theme_records =
     contrasts = Map.take(attrs, [:text_contrast_one, :text_contrast_two])
     attrs = Map.drop(attrs, [:text_contrast_one, :text_contrast_two])
 
-    {:ok,theme} = Themes.create_theme(attrs)
+    {:ok, theme} = Themes.create_theme(attrs)
 
     {theme, contrasts}
   end)

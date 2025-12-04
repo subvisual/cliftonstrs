@@ -6,7 +6,7 @@ defmodule Talents.Organizations do
   import Ecto.Query, warn: false
   alias Talents.Repo
   alias Talents.Accounts.User
-  alias Talents.Organizations.{Organization,OrgUser}
+  alias Talents.Organizations.{Organization, OrgUser}
 
   @doc """
   Returns the list of organizations.
