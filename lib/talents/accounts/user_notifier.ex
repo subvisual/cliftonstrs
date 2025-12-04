@@ -38,23 +38,36 @@ defmodule Talents.Accounts.UserNotifier do
   end
 
   @doc """
-  Deliver a welcome message to the user email.
+  Deliver a welcome message to the new user.
   """
-  def deliver_login_instructions(user, url) do
-    deliver(user.email, "Confirmation instructions", """
+  def deliver_login_instructions(user, login_url, onboarding_url) do
+    deliver(
+      user.email,
+      "Welcome to Talents!",
+      """
 
-    ==============================
+      ==============================
 
-    Hi #{user.name},
+      Hi #{user.name},
 
-    Welcome to Talents! You can check your account by visiting the URL below:
+      Welcome to Talents! Your account is ready.
 
-    #{url}
+      You can access your dashboard using the link below:
 
-    If you didn't create an account with us, please contact us.
+      #{login_url}
 
-    ==============================
-    """)
+      To help you get started, we also prepared a quick introduction to each section
+      of your account:
+
+      #{onboarding_url}
+
+      If you didn't create an account with us, please contact our support team.
+
+      We're excited to have you on board!
+
+      ==============================
+      """
+    )
   end
 
   @doc """
