@@ -50,6 +50,13 @@ defmodule TalentsWeb.Organization.OrganizationInfo do
           id="add-member-modal"
         />
       <% end %>
+
+      <.link
+        navigate={~p"/organizations/#{@organization.id}/team_fit"}
+        class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+      >
+        Team Fit
+      </.link>
       
     <!-- Member List -->
       <div>

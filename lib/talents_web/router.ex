@@ -60,6 +60,7 @@ defmodule TalentsWeb.Router do
       live "/users/organizations/create", Organization.OrganizationForm, :new
       live "/users/organizations/:id", Organization.OrganizationInfo, :show
       live "/users/organizations/:id/edit", Organization.OrganizationForm, :edit
+      live "/organizations/:id/team_fit", Organization.TeamFit, :show
     end
 
     post "/users/update-password", UserSessionController, :update_password

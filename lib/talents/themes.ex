@@ -168,4 +168,25 @@ defmodule Talents.Themes do
     )
     |> Enum.sort_by(fn {_k, v} -> v end, :desc)
   end
+
+  @doc """
+  Returns the contrast themes of a single theme.
+  """
+  def get_contrast_of_theme(theme_id) do
+    from(c in Contrast, where: c.theme_id == ^theme_id)
+    |> Repo.all()
+    |> Enum.map(fn c -> get_theme!(c.contrast_id) end)
+  end
+
+  @doc """
+  Returns the contrast themes of a single user.
+  """
+  def get_user_contrasts(user_id) do
+    top_themes = get_user_top_themes(user_id)
+
+    top_themes
+    |> Enum.flat_map(fn t -> get_contrast_of_theme(t.id) end)
+    |> Enum.uniq()
+    |> Enum.reject(fn c -> Enum.member?(top_themes, c) end)
+  end
 end
