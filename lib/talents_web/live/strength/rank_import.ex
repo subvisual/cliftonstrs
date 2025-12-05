@@ -35,7 +35,7 @@ defmodule TalentsWeb.Strength.RankImportComponent do
           |> String.split("\n")
           |> Enum.map(&String.trim/1)
           |> Enum.reduce(%{}, fn line, acc ->
-            case Regex.run(~r/^(\d{1,2})\.\s+(.+)$/, line) do
+            case Regex.run(~r/^(\d{1,2})\.\s+([\w-]+)/, line) do
               [_, pos, name] -> Map.put(acc, name, pos)
               _ -> acc
             end

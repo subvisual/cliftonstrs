@@ -230,8 +230,8 @@ defmodule Talents.Accounts do
   @doc """
   Delivers a welcome email with a login link.
   """
-  def deliver_login_instructions(%User{} = user, login_url) do
-    UserNotifier.deliver_login_instructions(user, login_url)
+  def deliver_login_instructions(%User{} = user, login_url, onboarding_url) do
+    UserNotifier.deliver_login_instructions(user, login_url, onboarding_url)
   end
 
   def change_user_name(user, attrs \\ %{}) do
