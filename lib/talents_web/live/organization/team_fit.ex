@@ -9,7 +9,7 @@ defmodule TalentsWeb.Organization.TeamFit do
       <h1 class="text-3xl font-bold">
         Team Fit - {@organization.name}
       </h1>
-
+      
     <!-- Member Selection Panel -->
       <div class="border p-4 rounded-lg">
         <h2 class="text-xl font-semibold mb-4">Select Members</h2>
@@ -35,44 +35,42 @@ defmodule TalentsWeb.Organization.TeamFit do
           Fit
         </.button>
       </div>
-
+      
     <!-- Results -->
-      <%= if @selected_personas != [] do %>
+      <%= if @persona != [] do %>
         <div class="space-y-10">
-          <%= for member <- @selected_personas do %>
-            <div class="p-6 border rounded-lg shadow-sm">
-
-    <!-- Member Identity -->
-              <div class="flex items-center space-x-4 mb-6">
-                <div>
-                  <h2 class="text-2xl font-bold">{member.name}</h2>
-                </div>
+          <div class="p-6 border rounded-lg shadow-sm">
+            
+    <!-- Persona -->
+            <div class="flex items-center space-x-4 mb-6">
+              <div>
+                <h2 class="text-2xl font-bold">Fit result:</h2>
               </div>
-
-              <h3 class="text-xl font-semibold mb-2">Top Themes</h3>
-
-              <%= for theme <- member.top_themes do %>
-                <details class="border rounded-lg mb-4 shadow-sm">
-                  <summary class="cursor-pointer p-4 flex justify-between items-center list-none">
-                    <span class="text-lg font-semibold">{theme.name}</span>
-                    <span class="text-gray-500">▼</span>
-                  </summary>
-
-                  <div class="p-4 border-t text-gray-700 space-y-2">
-                    <p><strong>Description:</strong> {theme.description}</p>
-                    <p><strong>I am:</strong> {theme.i_am}</p>
-                    <p><strong>I will:</strong> {theme.i_will}</p>
-                    <p><strong>I love:</strong> {theme.i_love}</p>
-                    <p><strong>I dislike:</strong> {theme.i_dislike}</p>
-                    <p><strong>I bring:</strong> {theme.i_bring}</p>
-                    <p><strong>I need:</strong> {theme.i_need}</p>
-                    <p><strong>Metaphor:</strong> {theme.metaphor_image}</p>
-                    <p><strong>Barrier:</strong> {theme.barrier_label}</p>
-                  </div>
-                </details>
-              <% end %>
             </div>
-          <% end %>
+
+            <h3 class="text-xl font-semibold mb-2">Top Themes</h3>
+
+            <%= for theme <- @persona do %>
+              <details class="border rounded-lg mb-4 shadow-sm">
+                <summary class="cursor-pointer p-4 flex justify-between items-center list-none">
+                  <span class="text-lg font-semibold">{theme.name}</span>
+                  <span class="text-gray-500">▼</span>
+                </summary>
+
+                <div class="p-4 border-t text-gray-70 space-y-2">
+                  <p><strong>Description:</strong> {theme.description}</p>
+                  <p><strong>I am:</strong> {theme.i_am}</p>
+                  <p><strong>I will:</strong> {theme.i_will}</p>
+                  <p><strong>I love:</strong> {theme.i_love}</p>
+                  <p><strong>I dislike:</strong> {theme.i_dislike}</p>
+                  <p><strong>I bring:</strong> {theme.i_bring}</p>
+                  <p><strong>I need:</strong> {theme.i_need}</p>
+                  <p><strong>Metaphor:</strong> {theme.metaphor_image}</p>
+                  <p><strong>Barrier:</strong> {theme.barrier_label}</p>
+                </div>
+              </details>
+            <% end %>
+          </div>
         </div>
       <% else %>
         <p class="text-gray-600 text-lg">
@@ -108,11 +106,12 @@ defmodule TalentsWeb.Organization.TeamFit do
   end
 
   def handle_event("fit", _params, socket) do
-    selected =
+    persona =
       socket.assigns.members
       |> Enum.filter(fn {_, selected?} -> selected? end)
       |> Enum.map(fn {m, _} -> m end)
+      |> Themes.get_persona()
 
-    {:noreply, assign(socket, :personas, personas)}
+    {:noreply, assign(socket, :persona, persona)}
   end
 end

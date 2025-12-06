@@ -189,4 +189,16 @@ defmodule Talents.Themes do
     |> Enum.uniq()
     |> Enum.reject(fn c -> Enum.member?(top_themes, c) end)
   end
+
+  @doc """
+  Get the persona (top 5 themes) of a group of users.
+  """
+  def get_persona([]), do: []
+
+  def get_persona(user_list) do
+    user_list
+    |> theme_distribution()
+    |> Enum.take(5)
+    |> Enum.map(fn {{theme, _domain}, _q} -> Repo.get_by!(Theme, name: theme) end)
+  end
 end
