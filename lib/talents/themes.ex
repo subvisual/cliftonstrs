@@ -201,4 +201,62 @@ defmodule Talents.Themes do
     |> Enum.take(5)
     |> Enum.map(fn {{theme, _domain}, _q} -> Repo.get_by!(Theme, name: theme) end)
   end
+
+  @doc """
+  Returns the contrast phrase for a given theme and contrast ID.
+  If no record is found, returns an empty string.
+  """
+  def get_contrast_phrase(theme_id, contrast_id) do
+    case Repo.get_by(Contrast, theme_id: theme_id, contrast_id: contrast_id) do
+      nil ->
+        ""
+
+      %Contrast{phrase: phrase} ->
+        phrase
+    end
+  end
+
+  @doc """
+  Given a list of contrast IDs and a list of theme IDs,
+  returns the list of phrases for all combinations.
+  """
+  def search_contrast(contrast_list, theme_list) do
+    for t <- theme_list, c <- contrast_list do
+      get_contrast_phrase(t.id, c.id)
+    end
+  end
+
+  @doc """
+  Compares two users by:
+    • getting the top themes for each user,
+    • finding contrasts user_one has that match themes of user_two,
+    • returning tuples {user_one_name, user_two_name, phrase}.
+  """
+  def compare_contrast(user_one, user_two) do
+    themes_one = get_user_top_themes(user_one.id)
+    themes_two = get_user_top_themes(user_two.id)
+
+    IO.inspect(themes_one)
+    IO.inspect(themes_two)
+
+    user_one.id
+    |> get_user_contrasts()
+    |> Enum.filter(fn c -> Enum.member?(themes_two, c) end)
+    |> search_contrast(themes_one)
+    |> Enum.map(fn ph -> {user_one.name, user_two.name, ph} end)
+  end
+
+  @doc """
+  For a list of users, compares every distinct pair
+  and returns the contrast results for each pair.
+  """
+  def get_shock([]), do: []
+
+  def get_shock(selected) do
+    for u1 <- selected, u2 <- selected, u1 != u2 do
+      compare_contrast(u1, u2)
+      |> Enum.filter(fn {_u1, _u2, ph} -> ph != "" end)
+    end
+    |> List.flatten()
+  end
 end

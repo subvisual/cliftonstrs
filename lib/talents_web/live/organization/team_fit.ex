@@ -39,9 +39,9 @@ defmodule TalentsWeb.Organization.TeamFit do
     <!-- Results -->
       <%= if @persona != [] do %>
         <div class="space-y-10">
+          
+    <!-- Persona block -->
           <div class="p-6 border rounded-lg shadow-sm">
-            
-    <!-- Persona -->
             <div class="flex items-center space-x-4 mb-6">
               <div>
                 <h2 class="text-2xl font-bold">Fit result:</h2>
@@ -71,6 +71,21 @@ defmodule TalentsWeb.Organization.TeamFit do
               </details>
             <% end %>
           </div>
+          
+    <!-- Shock Results -->
+          <%= if @shock != [] do %>
+            <div class="p-6 border rounded-lg shadow-sm">
+              <h3 class="text-xl font-semibold mb-4">Shock Results</h3>
+
+              <ul class="space-y-2">
+                <%= for {u1_name, u2_name, phrase} <- @shock do %>
+                  <li class="border p-3 rounded">
+                    <strong>{u1_name} + {u2_name}:</strong> {phrase}
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
         </div>
       <% else %>
         <p class="text-gray-600 text-lg">
@@ -93,7 +108,8 @@ defmodule TalentsWeb.Organization.TeamFit do
      socket
      |> assign(:organization, organization)
      |> assign(:members, members)
-     |> assign(:persona, [])}
+     |> assign(:persona, [])
+     |> assign(:shock, [])}
   end
 
   def handle_event("toggle_member", %{"id" => id}, socket) do
@@ -106,12 +122,17 @@ defmodule TalentsWeb.Organization.TeamFit do
   end
 
   def handle_event("fit", _params, socket) do
-    persona =
+    selected =
       socket.assigns.members
       |> Enum.filter(fn {_, selected?} -> selected? end)
       |> Enum.map(fn {m, _} -> m end)
-      |> Themes.get_persona()
 
-    {:noreply, assign(socket, :persona, persona)}
+    persona = Themes.get_persona(selected)
+    shock = Themes.get_shock(selected)
+
+    {:noreply,
+     socket
+     |> assign(:persona, persona)
+     |> assign(:shock, shock)}
   end
 end
