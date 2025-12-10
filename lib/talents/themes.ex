@@ -236,9 +236,6 @@ defmodule Talents.Themes do
     themes_one = get_user_top_themes(user_one.id)
     themes_two = get_user_top_themes(user_two.id)
 
-    IO.inspect(themes_one)
-    IO.inspect(themes_two)
-
     user_one.id
     |> get_user_contrasts()
     |> Enum.filter(fn c -> Enum.member?(themes_two, c) end)
@@ -247,8 +244,15 @@ defmodule Talents.Themes do
   end
 
   @doc """
-  For a list of users, compares every distinct pair
-  and returns the contrast results for each pair.
+  Takes a list of users and computes all "shocks" (contrasts) between
+  every **distinct pair** of users.
+
+  A *shock* is defined as a non-empty contrast result between two users.
+  For each pair of different users, this function runs `compare_contrast/2`,
+  filters out empty contrast entries, and returns a flattened list of all
+  resulting shocks.
+
+  Returns an empty list when given an empty list.
   """
   def get_shock([]), do: []
 
