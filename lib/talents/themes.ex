@@ -168,4 +168,99 @@ defmodule Talents.Themes do
     )
     |> Enum.sort_by(fn {_k, v} -> v end, :desc)
   end
+
+  @doc """
+  Returns the contrast themes of a single theme.
+  """
+  def get_contrast_of_theme(theme_id) do
+    from(c in Contrast, where: c.theme_id == ^theme_id)
+    |> Repo.all()
+    |> Enum.map(fn c -> get_theme!(c.contrast_id) end)
+  end
+
+  @doc """
+  Returns the contrast themes of a single user.
+  """
+  def get_user_contrasts(user_id) do
+    top_themes = get_user_top_themes(user_id)
+
+    top_themes
+    |> Enum.flat_map(fn t -> get_contrast_of_theme(t.id) end)
+    |> Enum.uniq()
+    |> Enum.reject(fn c -> Enum.member?(top_themes, c) end)
+  end
+
+  @doc """
+  Get the persona (top 5 themes) of a group of users.
+  """
+  def get_persona([]), do: []
+
+  def get_persona(user_list) do
+    user_list
+    |> theme_distribution()
+    |> Enum.take(5)
+    |> Enum.map(fn {{theme, _domain}, _q} -> Repo.get_by!(Theme, name: theme) end)
+  end
+
+  @doc """
+  Returns the contrast phrase for a given theme and contrast ID.
+  If no record is found, returns an empty string.
+  """
+  def get_contrast_phrase(theme_id, contrast_id) do
+    case Repo.get_by(Contrast, theme_id: theme_id, contrast_id: contrast_id) do
+      nil ->
+        ""
+
+      %Contrast{phrase: phrase} ->
+        phrase
+    end
+  end
+
+  @doc """
+  Given a list of contrast IDs and a list of theme IDs,
+  returns the list of phrases for all combinations.
+  """
+  def search_contrast(contrast_list, theme_list) do
+    for t <- theme_list, c <- contrast_list do
+      get_contrast_phrase(t.id, c.id)
+    end
+  end
+
+  @doc """
+  Compares two users by:
+    • getting the top themes for each user,
+    • finding contrasts user_one has that match themes of user_two,
+    • returning tuples {user_one_name, user_two_name, phrase}.
+  """
+  def compare_contrast(user_one, user_two) do
+    themes_one = get_user_top_themes(user_one.id)
+    themes_two = get_user_top_themes(user_two.id)
+
+    user_one.id
+    |> get_user_contrasts()
+    |> Enum.filter(fn c -> Enum.member?(themes_two, c) end)
+    |> search_contrast(themes_one)
+    |> Enum.map(fn ph -> {user_one.name, user_two.name, ph} end)
+  end
+
+  @doc """
+  Takes a list of users and computes all "shocks" (contrasts) between
+  every **distinct pair** of users.
+
+  A *shock* is defined as a non-empty contrast result between two users.
+  For each pair of different users, this function runs `compare_contrast/2`,
+  filters out empty contrast entries, and returns a flattened list of all
+  resulting shocks.
+
+  Returns an empty list when given an empty list.
+  """
+  def get_shock([]), do: []
+
+  def get_shock(selected) do
+    for u1 <- selected, u2 <- selected, u1 != u2 do
+      compare_contrast(u1, u2)
+      |> Enum.filter(fn {_u1, _u2, ph} -> ph != "" end)
+    end
+    |> List.flatten()
+  end
 end
